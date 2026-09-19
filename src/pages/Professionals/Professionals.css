@@ -1,0 +1,106 @@
+.directory {
+  padding-bottom: 60px;
+}
+
+.directory__header {
+  padding: 24px 0 26px;
+}
+
+.directory__header h1 {
+  font-size: 1.6rem;
+  margin-bottom: 6px;
+}
+
+.directory__header p {
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.directory__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 20px 0 8px;
+}
+
+.directory__chip {
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  padding: 7px 14px;
+  border-radius: 999px;
+  font-size: 0.82rem;
+}
+
+.directory__chip:hover {
+  border-color: var(--brand);
+}
+
+.directory__chip--active {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: var(--text-on-brand);
+}
+
+.directory__result-count {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  margin: 18px 0 18px;
+}
+
+.booking-panel {
+  display: grid;
+  grid-template-columns: 1.2fr repeat(3, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  margin: 18px 0;
+  padding: 16px;
+  background: var(--bg-surface-alt);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+}
+
+.booking-panel p { margin: 4px 0 0; color: var(--text-secondary); font-size: .82rem; }
+.booking-panel input, .booking-panel select, .booking-panel button { min-width: 0; padding: 9px 10px; border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); background: var(--bg-surface); color: var(--text-primary); font: inherit; }
+.booking-panel button { background: var(--brand); color: var(--text-on-brand); border-color: var(--brand); font-weight: 600; }
+@media (max-width: 900px) { .booking-panel { grid-template-columns: 1fr 1fr; } .booking-panel > div, .booking-panel > p { grid-column: 1 / -1; } }
+@media (max-width: 560px) { .booking-panel { grid-template-columns: 1fr; } }
+
+.directory__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.directory__with-map {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(320px, 0.85fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.directory__with-map > .map-panel {
+  position: sticky;
+  top: 88px;
+}
+
+.directory__empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: var(--text-muted);
+  padding: 40px 0;
+}
+
+@media (max-width: 980px) {
+  .directory__with-map { grid-template-columns: 1fr; }
+  .directory__with-map > .map-panel { position: static; }
+  .directory__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 620px) {
+  .directory__grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,28 @@
+.section-heading {
+  margin-bottom: 36px;
+  max-width: 640px;
+}
+
+.section-heading--center {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.section-heading__eyebrow {
+  color: var(--accent-700);
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin: 0 0 10px 0;
+}
+
+.section-heading__title {
+  font-size: clamp(1.5rem, 2.4vw, 2.1rem);
+  margin-bottom: 10px;
+}
+
+.section-heading__desc {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  margin: 0;
+}

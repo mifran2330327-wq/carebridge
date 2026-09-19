@@ -1,0 +1,33 @@
+.recommendations {
+  padding-top: 40px;
+  padding-bottom: 70px;
+}
+
+.recommendations__group {
+  margin-bottom: 36px;
+}
+
+.recommendations__group-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.05rem;
+  margin-bottom: 16px;
+  color: var(--text-primary);
+}
+
+.recommendations__group-title svg {
+  color: var(--accent-600);
+}
+
+.recommendations__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 700px) {
+  .recommendations__grid {
+    grid-template-columns: 1fr;
+  }
+}

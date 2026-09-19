@@ -1,0 +1,58 @@
+.school-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  transition: box-shadow var(--transition-fast), transform var(--transition-fast);
+}
+
+.school-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.school-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.school-card__name {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.school-card__type {
+  margin: 3px 0 0;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.school-card__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.school-card__meta span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.school-card__facilities {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.school-card__btn {
+  align-self: flex-start;
+  margin-top: 4px;
+}

@@ -1,0 +1,158 @@
+/* Signup reuses the same visual language as Login (auth-page / auth-card /
+   auth-form) but keeps its own file per component so either page can
+   change styling independently later. */
+
+.auth-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px 80px;
+  min-height: 90vh;
+  background: var(--bg-app);
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: 36px 32px;
+}
+
+.auth-card__brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  color: var(--brand);
+  margin-bottom: 26px;
+}
+
+.auth-card__title {
+  font-size: 1.5rem;
+  margin-bottom: 6px;
+}
+
+.auth-card__subtitle {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin-bottom: 26px;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.auth-form__roles {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.auth-form__role {
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  background: var(--bg-app);
+  color: var(--text-secondary);
+  padding: 10px;
+  font-weight: 600;
+}
+
+.auth-form__role--active {
+  border-color: var(--brand);
+  background: var(--brand-soft);
+  color: var(--brand);
+}
+
+.auth-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.auth-form__input {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 11px 14px;
+  background: var(--bg-app);
+  color: var(--text-muted);
+}
+
+.auth-form__input:focus-within {
+  border-color: var(--brand);
+}
+
+.auth-form__input input {
+  border: none;
+  outline: none;
+  background: none;
+  width: 100%;
+  color: var(--text-primary);
+  font-size: 0.92rem;
+}
+
+.auth-form__field textarea {
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 11px 14px;
+  resize: vertical;
+  background: var(--bg-app);
+  color: var(--text-primary);
+  font: inherit;
+}
+
+.auth-form__terms {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.auth-form__submit {
+  width: 100%;
+  margin-top: 4px;
+}
+
+.auth-form__message {
+  margin: -4px 0 0;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+.auth-form__message--error {
+  color: #a33a36;
+  background: #fff0ef;
+  border: 1px solid #f2c7c4;
+}
+
+.auth-form__message--success {
+  color: #216b4b;
+  background: #edf9f1;
+  border: 1px solid #b9e3c8;
+}
+
+.auth-card__footer {
+  text-align: center;
+  margin: 22px 0 0;
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+}
+
+.auth-card__footer a {
+  color: var(--brand);
+  font-weight: 600;
+}

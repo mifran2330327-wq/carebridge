@@ -1,0 +1,30 @@
+/* Pill-shaped light/dark switch */
+.theme-toggle {
+  width: 52px;
+  height: 28px;
+  border-radius: 999px;
+  border: 1px solid var(--border-strong);
+  background: var(--bg-surface-alt);
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  transition: background var(--transition-fast), border-color var(--transition-fast);
+}
+
+.theme-toggle__thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--brand);
+  color: var(--text-on-brand);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateX(0);
+  transition: transform var(--transition-base), background var(--transition-fast);
+}
+
+.theme-toggle__thumb--dark {
+  transform: translateX(24px);
+  background: var(--accent);
+}

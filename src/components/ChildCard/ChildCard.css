@@ -1,0 +1,74 @@
+.child-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  position: relative;
+}
+
+.child-card__header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.child-card__avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent-700);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.child-card__name {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.child-card__age {
+  margin: 2px 0 0;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.child-card__edit {
+  margin-left: auto;
+  background: var(--bg-surface-alt);
+  border: none;
+  border-radius: 8px;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+}
+
+.child-card__edit:hover {
+  color: var(--brand);
+}
+
+.child-card__edit:last-child:hover {
+  color: #a33a36;
+}
+
+.child-card__diagnosis {
+  font-weight: 500;
+  color: var(--text-primary);
+  margin: 0;
+  font-size: 0.92rem;
+}
+
+.child-card__notes {
+  margin: 4px 0 0;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}

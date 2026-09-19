@@ -13,23 +13,24 @@ if (!appId || !adminKey) {
 const clean = (value) => typeof value === 'string' ? value.trim() : ''
 const joinText = (...values) => values.map(clean).filter(Boolean).join(' • ')
 const client = algoliasearch(appId, adminKey)
-const index = client.initIndex(indexName)
 
 const [professionalRows, institutionRows, resourceRows] = await Promise.all([
   prisma.professional.findMany({
-    where: { verificationStatus: 'VERIFIED' },
     select: {
       id: true,
       name: true,
       specialty: true,
       qualification: true,
       focus: true,
+      providerType: true,
+      professionType: true,
       location: true,
       chamber: true,
       chamberAddress: true,
       phone: true,
       latitude: true,
       longitude: true,
+      verificationStatus: true,
       institution: {
         select: {
           name: true,
@@ -55,7 +56,6 @@ const [professionalRows, institutionRows, resourceRows] = await Promise.all([
     },
   }),
   prisma.institution.findMany({
-    where: { verificationStatus: 'VERIFIED' },
     select: {
       id: true,
       name: true,
@@ -68,6 +68,7 @@ const [professionalRows, institutionRows, resourceRows] = await Promise.all([
       website: true,
       latitude: true,
       longitude: true,
+      verificationStatus: true,
     },
   }),
   prisma.resource.findMany({
@@ -104,6 +105,18 @@ const professionalRecords = professionalRows.map((professional) => {
     category: 'Professional',
     specialty: [...new Set(specialtyNames)].join(', '),
     degrees: degreeNames.join(', '),
+    verificationStatus: professional.verificationStatus,
+    keywords: [
+      'doctor',
+      'physician',
+      'specialist',
+      'therapist',
+      professional.providerType,
+      professional.professionType,
+      professional.specialty,
+      professional.focus,
+      ...specialtyNames,
+    ].map(clean).filter(Boolean),
     location: joinText(
       professional.location,
       professional.chamberAddress,
@@ -137,6 +150,20 @@ const institutionRecords = institutionRows.map((institution) => ({
   website: institution.website || undefined,
   latitude: institution.latitude || undefined,
   longitude: institution.longitude || undefined,
+  verificationStatus: institution.verificationStatus,
+  keywords: [
+    'school',
+    'hospital',
+    'center',
+    'centre',
+    'institution',
+    'care',
+    'child',
+    'children',
+    institution.type,
+    institution.ownership,
+    institution.ageRange,
+  ].map(clean).filter(Boolean),
   url: '/schools',
 }))
 
@@ -164,23 +191,30 @@ const records = [
   ...resourceRecords,
 ]
 
-await index.setSettings({
-  searchableAttributes: [
-    'title',
-    'description',
-    'specialty',
-    'degrees',
-    'location',
-    'category',
-  ],
-  attributesForFaceting: [
-    'filterOnly(category)',
-    'specialty',
-    'location',
-  ],
+await client.setSettings({
+  indexName,
+  indexSettings: {
+    searchableAttributes: [
+      'title',
+      'keywords',
+      'description',
+      'specialty',
+      'degrees',
+      'location',
+      'category',
+    ],
+    attributesForFaceting: [
+      'filterOnly(category)',
+      'specialty',
+      'location',
+    ],
+  },
 })
 
-await index.replaceAllObjects(records, { safe: true })
+await client.replaceAllObjects({
+  indexName,
+  objects: records,
+})
 
 console.log(`Uploaded ${records.length} records to Algolia index "${indexName}"`)
 

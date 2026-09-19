@@ -1,0 +1,86 @@
+/* Schools directory reuses the same directory__* pattern as Professionals,
+   duplicated here on purpose so this file is self-contained and easy to
+   scan on its own. */
+
+.directory {
+  padding-bottom: 60px;
+}
+
+.directory__header {
+  padding: 24px 0 26px;
+}
+
+.directory__header h1 {
+  font-size: 1.6rem;
+  margin-bottom: 6px;
+}
+
+.directory__header p {
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.directory__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 20px 0 8px;
+}
+
+.directory__chip {
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  padding: 7px 14px;
+  border-radius: 999px;
+  font-size: 0.82rem;
+}
+
+.directory__chip:hover {
+  border-color: var(--brand);
+}
+
+.directory__chip--active {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: var(--text-on-brand);
+}
+
+.directory__result-count {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  margin: 18px 0 18px;
+}
+
+.directory__empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: var(--text-muted);
+  padding: 40px 0;
+}
+
+.schools__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.directory__with-map {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(320px, 0.85fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.directory__with-map > .map-panel {
+  position: sticky;
+  top: 88px;
+}
+
+@media (max-width: 700px) {
+  .directory__with-map { grid-template-columns: 1fr; }
+  .directory__with-map > .map-panel { position: static; }
+  .schools__grid {
+    grid-template-columns: 1fr;
+  }
+}

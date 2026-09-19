@@ -1,0 +1,7 @@
+.tag-input { display: flex; flex-direction: column; gap: 6px; font-size: .85rem; font-weight: 500; color: var(--text-secondary); position: relative; }
+.tag-input__box { display: flex; flex-wrap: wrap; gap: 6px; padding: 7px; min-height: 44px; border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); background: var(--bg-app); }
+.tag-input__box button { border: 0; border-radius: 999px; padding: 5px 8px; background: var(--brand-soft); color: var(--brand); font-size: .76rem; }
+.tag-input__box input { flex: 1; min-width: 110px; border: 0; outline: 0; background: transparent; color: var(--text-primary); }
+.tag-input__suggestions { position: absolute; z-index: 5; top: 100%; left: 0; right: 0; display: flex; flex-direction: column; padding: 5px; border: 1px solid var(--border-subtle); background: var(--bg-surface); box-shadow: var(--shadow-md); }
+.tag-input__suggestions button { border: 0; background: transparent; color: var(--text-primary); padding: 8px; text-align: left; }
+.tag-input__suggestions button:hover { background: var(--bg-surface-alt); }

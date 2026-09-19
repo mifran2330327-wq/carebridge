@@ -15,6 +15,7 @@ API routes, authentication, spreadsheet import, and frontend connection, read
 - PostgreSQL hosted on Supabase with Prisma
 - JWT authentication with bcrypt password hashing
 - Leaflet and OpenStreetMap for the Smart Search map
+- Algolia search for the CareBridge Guide chatbot
 
 ## Start locally
 

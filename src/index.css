@@ -1,0 +1,216 @@
+/* =====================================================================
+   GLOBAL DESIGN TOKENS
+   Everything in CareBridge is built on one base color, #335765, plus a
+   warm accent for calls-to-action. Both light and dark themes read
+   from the same variable names below (via [data-theme]) so components
+   never hard-code a color — they just reference var(--...).
+   ===================================================================== */
+
+:root {
+  /* ---- Brand: teal scale, derived from #335765 ---- */
+  --teal-900: #16262c;
+  --teal-800: #1f3941;
+  --teal-700: #284854;
+  --teal-600: #335765; /* base brand color */
+  --teal-500: #416b7b;
+  --teal-400: #5c8695;
+  --teal-300: #8aacb8;
+  --teal-200: #bbd2d9;
+  --teal-100: #e1ebee;
+  --teal-50: #f2f7f8;
+
+  /* ---- Accent: warm apricot, used sparingly for CTAs / highlights ---- */
+  --accent-700: #c96a34;
+  --accent-600: #e8965a;
+  --accent-500: #f0ad79;
+  --accent-100: #fbe8d7;
+
+  /* ---- Status colors ---- */
+  --success: #3f8f5f;
+  --warning: #d99a2b;
+  --danger: #c1503f;
+
+  /* ---- Typography ---- */
+  --font-body: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace;
+
+  /* ---- Shape & motion ---- */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --shadow-sm: 0 1px 3px rgba(22, 38, 44, 0.08);
+  --shadow-md: 0 6px 20px rgba(22, 38, 44, 0.10);
+  --shadow-lg: 0 16px 40px rgba(22, 38, 44, 0.16);
+  --transition-fast: 150ms ease;
+  --transition-base: 250ms ease;
+
+  --max-width: 1200px;
+}
+
+/* ---------------------------------------------------------------------
+   LIGHT THEME (default)
+   --------------------------------------------------------------------- */
+:root,
+[data-theme='light'] {
+  --bg-app: var(--teal-50);
+  --bg-surface: #ffffff;
+  --bg-surface-alt: var(--teal-100);
+  --bg-sunken: #eef4f5;
+
+  --text-primary: var(--teal-900);
+  --text-secondary: #4b6069;
+  --text-muted: #7c8f96;
+  --text-on-brand: #ffffff;
+  --text-on-accent: #3a2311;
+
+  --border-subtle: #dbe6e9;
+  --border-strong: var(--teal-300);
+
+  --brand: var(--teal-600);
+  --brand-hover: var(--teal-700);
+  --brand-soft: var(--teal-100);
+
+  --accent: var(--accent-600);
+  --accent-hover: var(--accent-700);
+  --accent-soft: var(--accent-100);
+}
+
+/* ---------------------------------------------------------------------
+   DARK THEME
+   --------------------------------------------------------------------- */
+[data-theme='dark'] {
+  --bg-app: #0f1a1e;
+  --bg-surface: #16262c;
+  --bg-surface-alt: #1c2f36;
+  --bg-sunken: #0c1518;
+
+  --text-primary: #eef4f5;
+  --text-secondary: #b7c7cc;
+  --text-muted: #7f9299;
+  --text-on-brand: #ffffff;
+  --text-on-accent: #2a1a0c;
+
+  --border-subtle: #253c44;
+  --border-strong: #33505a;
+
+  --brand: var(--teal-400);
+  --brand-hover: var(--teal-300);
+  --brand-soft: #1e343c;
+
+  --accent: var(--accent-600);
+  --accent-hover: var(--accent-500);
+  --accent-soft: #3a2c1c;
+}
+
+/* ---------------------------------------------------------------------
+   RESET & BASE ELEMENTS
+   --------------------------------------------------------------------- */
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  background: var(--bg-app);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  transition: background var(--transition-base), color var(--transition-base);
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: var(--font-body);
+  font-weight: 600;
+  line-height: 1.2;
+  margin: 0 0 0.5em 0;
+  color: var(--text-primary);
+}
+
+p {
+  margin: 0 0 1em 0;
+  color: var(--text-secondary);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul, ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+button, input, textarea, select {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* Visible keyboard focus everywhere — accessibility floor */
+:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+/* Respect reduced-motion preference */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* Shared utility: monospace "data" text used for stats, tags, distances */
+.mono {
+  font-family: var(--font-mono);
+  letter-spacing: -0.01em;
+}
+
+/* Shared page-width wrapper */
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Shared "page" top padding so content clears the fixed navbar */
+.page {
+  padding-top: 88px;
+  min-height: 70vh;
+}
+
+::selection {
+  background: var(--accent-soft);
+  color: var(--text-on-accent);
+}
+
+/* Scrollbar (webkit) tuned to the palette, purely cosmetic */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-sunken);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--teal-300);
+  border-radius: 10px;
+}

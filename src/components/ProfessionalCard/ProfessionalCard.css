@@ -1,0 +1,109 @@
+.pro-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  transition: box-shadow var(--transition-fast), border-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.pro-card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--border-strong);
+  transform: translateY(-2px);
+}
+
+.pro-card__top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.pro-card__avatar {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: var(--brand-soft);
+  color: var(--brand);
+  font-weight: 600;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.pro-card__name {
+  font-size: 1rem;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pro-card__verified {
+  color: var(--brand);
+}
+
+.pro-card__role {
+  margin: 2px 0 0;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.pro-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.pro-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
+
+.pro-card__availability-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 9px 10px;
+  border-left: 3px solid var(--brand);
+  background: var(--bg-surface-alt);
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+}
+
+.pro-card__meta-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.pro-card__footer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.pro-card__price {
+  font-weight: 600;
+  font-size: 0.92rem;
+  margin: 0;
+  color: var(--text-primary);
+}
+
+.pro-card__availability {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.78rem;
+  color: var(--success);
+  margin: 3px 0 0;
+}
