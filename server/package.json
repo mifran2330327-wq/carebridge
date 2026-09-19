@@ -1,0 +1,29 @@
+{
+  "name": "carebridge-server",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch src/server.js",
+    "start": "node src/server.js",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:studio": "prisma studio",
+    "import:listings": "node scripts/import-listings.js",
+    "seed:lookups": "node scripts/seed-lookups.js",
+    "seed:admin": "node scripts/seed-admin.js"
+    ,"seed:resources": "node scripts/seed-resources.js"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.19.0",
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.3",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "prisma": "^6.19.0"
+  }
+}

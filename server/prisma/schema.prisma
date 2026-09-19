@@ -1,0 +1,255 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum UserRole {
+  PARENT
+  DOCTOR
+  ADMIN
+}
+
+enum VerificationStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
+enum BlogStatus {
+  DRAFT
+  PUBLISHED
+  REJECTED
+}
+
+enum ResourceType {
+  ARTICLE
+  CASE_STUDY
+  VIDEO
+  GUIDE
+  DOWNLOADABLE
+}
+
+enum ResourceStatus {
+  PENDING
+  PUBLISHED
+  REJECTED
+}
+
+enum AppointmentStatus {
+  REQUESTED
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+}
+
+model User {
+  id           String        @id @default(uuid())
+  email        String        @unique
+  passwordHash String
+  name         String
+  role         UserRole      @default(PARENT)
+  isBanned     Boolean       @default(false)
+  mustChangePassword Boolean @default(false)
+  children     Child[]
+  appointments Appointment[]
+  professional Professional?
+  blogPosts    BlogPost[]
+  resourcesCreated Resource[] @relation("ResourceCreatedBy")
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model Degree {
+  id        String        @id @default(cuid())
+  name      String        @unique
+  isCustom  Boolean       @default(false)
+  createdAt DateTime      @default(now())
+  doctors   DoctorDegree[]
+}
+
+model Specialty {
+  id        String           @id @default(cuid())
+  name      String           @unique
+  isCustom  Boolean          @default(false)
+  createdAt DateTime         @default(now())
+  doctors   DoctorSpecialty[]
+  resources ResourceSpecialty[]
+}
+
+model Child {
+  id           String        @id @default(uuid())
+  name         String
+  dateOfBirth  DateTime?
+  supportNeeds String?
+  conditionDescription String?
+  parentId     String
+  parent       User          @relation(fields: [parentId], references: [id], onDelete: Cascade)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  @@index([parentId])
+}
+
+model Professional {
+  id              String        @id @default(uuid())
+  name            String
+  specialty       String
+  description     String?
+  qualification   String?
+  registrationNo  String?
+  providerType    String?
+  professionType  String?
+  focus           String?
+  degrees         DoctorDegree[]
+  specialties     DoctorSpecialty[]
+  certificates    Certificate[]
+  location        String?
+  email           String?
+  phone           String?
+  whatsapp        String?
+  appointmentMethod String?
+  visitingDays    String?
+  visitingHours   String?
+  chamber         String?
+  chamberAddress  String?
+  licenseAuthority String?
+  licenseNumber   String?
+  nidNumber       String?
+  verificationNote String?
+  consultationFee String?
+  latitude        Float?
+  longitude       Float?
+  verificationStatus VerificationStatus @default(PENDING)
+  ownerId         String?       @unique
+  owner           User?         @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+  institutionId   String?
+  institution     Institution?  @relation(fields: [institutionId], references: [id], onDelete: SetNull)
+  appointments    Appointment[]
+  resources       Resource[]
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([specialty])
+  @@index([institutionId])
+}
+
+model DoctorDegree {
+  doctorId String
+  degreeId String
+  doctor   Professional @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+  degree   Degree       @relation(fields: [degreeId], references: [id], onDelete: Cascade)
+
+  @@id([doctorId, degreeId])
+}
+
+model DoctorSpecialty {
+  doctorId    String
+  specialtyId String
+  doctor      Professional @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+  specialty   Specialty    @relation(fields: [specialtyId], references: [id], onDelete: Cascade)
+
+  @@id([doctorId, specialtyId])
+}
+
+model Certificate {
+  id         String       @id @default(cuid())
+  doctorId   String
+  doctor     Professional @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+  fileUrl    String
+  label      String
+  uploadedAt DateTime     @default(now())
+}
+
+model Resource {
+  id           String              @id @default(cuid())
+  type         ResourceType
+  title        String
+  summary      String
+  externalUrl  String?
+  thumbnailUrl String?
+  sourceName   String?
+  featured     Boolean             @default(false)
+  status       ResourceStatus      @default(PENDING)
+  authorId     String?
+  author       Professional?       @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  createdById  String
+  createdBy    User                @relation("ResourceCreatedBy", fields: [createdById], references: [id], onDelete: Restrict)
+  createdAt    DateTime            @default(now())
+  publishedAt  DateTime?
+  specialties  ResourceSpecialty[]
+
+  @@index([status, createdAt])
+  @@index([type])
+  @@index([createdById])
+}
+
+model ResourceSpecialty {
+  resourceId  String
+  specialtyId String
+  resource    Resource  @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  specialty   Specialty @relation(fields: [specialtyId], references: [id], onDelete: Cascade)
+
+  @@id([resourceId, specialtyId])
+}
+
+model Institution {
+  id                 String             @id @default(uuid())
+  externalId         String?            @unique
+  name               String
+  type               String?
+  ownership          String?
+  status             String?
+  division           String?
+  district           String?
+  area               String?
+  address            String?
+  email              String?
+  website            String?
+  ageRange           String?
+  latitude           Float?
+  longitude          Float?
+  verificationStatus VerificationStatus @default(PENDING)
+  professionals      Professional[]
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+
+  @@index([name])
+  @@index([district])
+}
+
+model BlogPost {
+  id        String     @id @default(uuid())
+  title     String
+  content   String
+  category  String     @default("Blog")
+  status    BlogStatus @default(DRAFT)
+  authorId  String
+  author    User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  @@index([status])
+  @@index([authorId])
+}
+
+model Appointment {
+  id             String              @id @default(uuid())
+  scheduledAt    DateTime
+  status         AppointmentStatus   @default(REQUESTED)
+  notes          String?
+  parentId       String
+  professionalId String
+  parent         User                @relation(fields: [parentId], references: [id], onDelete: Cascade)
+  professional   Professional        @relation(fields: [professionalId], references: [id], onDelete: Restrict)
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+
+  @@index([parentId])
+  @@index([professionalId])
+  @@index([scheduledAt])
+}
