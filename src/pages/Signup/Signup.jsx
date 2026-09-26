@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Mail, Lock, User, HeartHandshake } from 'lucide-react'
 import Button from '../../components/Button/Button.jsx'
 import { register, saveSession } from '../../lib/api.js'
@@ -11,6 +11,7 @@ export default function Signup() {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [loading, setLoading] = useState(false)
+  const navigate = useNavigate()
 
   function handleChange(e) {
     setForm((f) => ({ ...f, [e.target.name]: e.target.value }))
@@ -45,8 +46,8 @@ export default function Signup() {
     } : undefined })
       .then((data) => {
         saveSession(data)
-        setSuccess('Account created successfully. Opening your dashboard...')
-        window.setTimeout(() => { window.location.href = '/dashboard' }, 700)
+        setSuccess('Account created successfully.')
+        navigate('/dashboard', { replace: true })
       })
       .catch((submitError) => setError(submitError.message))
       .finally(() => setLoading(false))

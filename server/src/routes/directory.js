@@ -12,10 +12,26 @@ router.get('/', async (_request, response) => {
   response.json({ institutions, professionals })
 })
 
-router.get('/resources', async (_request, response) => {
-  const resources = await prisma.blogPost.findMany({ where: { status: 'PUBLISHED' }, include: { author: { select: { name: true } } }, orderBy: { createdAt: 'desc' } })
-  response.json({ resources })
+router.get('/blog', async (request, response) => {
+  const { take, skip } = { ...parsePagination(request.query) }
+  const [posts, total] = await Promise.all([
+    prisma.blogPost.findMany({
+      where: { status: 'PUBLISHED' },
+      include: { author: { select: { name: true } } },
+      orderBy: { createdAt: 'desc' },
+      take,
+      skip,
+    }),
+    prisma.blogPost.count({ where: { status: 'PUBLISHED' } }),
+  ])
+  response.json({ posts, pagination: { total, take, skip } })
 })
+
+function parsePagination(query) {
+  const take = Math.min(Math.max(parseInt(query.take || '20', 10), 1), 100)
+  const skip = Math.max(parseInt(query.skip || '0', 10), 0)
+  return { take, skip }
+}
 
 function requireAdmin(request, response, next) {
   if (request.user?.role !== 'ADMIN') return response.status(403).json({ error: 'Admin access required' })
@@ -24,12 +40,15 @@ function requireAdmin(request, response, next) {
 
 router.use(requireAuth, requireAdmin)
 
-router.get('/pending', async (_request, response) => {
-  const [professionals, institutions] = await Promise.all([
-    prisma.professional.findMany({ where: { verificationStatus: 'PENDING' }, include: { institution: true } }),
-    prisma.institution.findMany({ where: { verificationStatus: 'PENDING' } }),
+router.get('/pending', async (request, response) => {
+  const { take, skip } = parsePagination(request.query)
+  const [professionals, institutions, totalProfessionals, totalInstitutions] = await Promise.all([
+    prisma.professional.findMany({ where: { verificationStatus: 'PENDING' }, include: { institution: true }, take, skip }),
+    prisma.institution.findMany({ where: { verificationStatus: 'PENDING' }, take, skip }),
+    prisma.professional.count({ where: { verificationStatus: 'PENDING' } }),
+    prisma.institution.count({ where: { verificationStatus: 'PENDING' } }),
   ])
-  response.json({ professionals, institutions })
+  response.json({ professionals, institutions, pagination: { total: totalProfessionals + totalInstitutions, take, skip } })
 })
 
 router.patch('/professionals/:id/verify', async (request, response) => {

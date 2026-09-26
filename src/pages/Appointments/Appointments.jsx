@@ -2,21 +2,17 @@ import { useEffect, useState } from 'react'
 import { CalendarClock, Video, MapPin, Plus, Clock3 } from 'lucide-react'
 import Button from '../../components/Button/Button.jsx'
 import Badge from '../../components/Badge/Badge.jsx'
-import { getAppointments, getSession } from '../../lib/api.js'
+import { getAppointments } from '../../lib/api.js'
+import { useAuth } from '../../context/AuthContext.jsx'
 import './Appointments.css'
 
-// Simple past-appointments mock, kept local to this page since it's only
-// used here (unlike upcomingAppointments, which is shared with Dashboard).
-const PAST_APPOINTMENTS = [
-  { id: 'past1', professional: 'Tanvir Ahmed', role: 'Occupational Therapist', date: 'Aug 21, 2026', time: '11:00 AM', child: 'Arham', mode: 'In-person' },
-  { id: 'past2', professional: 'Dr. Nabila Chowdhury', role: 'Developmental Pediatrician', date: 'Aug 14, 2026', time: '2:30 PM', child: 'Meherin', mode: 'Video call' },
-]
+import { Link } from 'react-router-dom'
 
 export default function Appointments() {
   const [tab, setTab] = useState('upcoming')
   const [appointments, setAppointments] = useState([])
   const [error, setError] = useState('')
-  const session = getSession()
+  const { user } = useAuth()
 
   useEffect(() => {
     getAppointments()
@@ -34,7 +30,7 @@ export default function Appointments() {
         role: appointment.professional.specialty,
         date: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
         time: date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }),
-        child: session?.user.role === 'DOCTOR' ? appointment.parent.name : (appointment.notes?.split(' - ')[0] || 'Child profile'),
+        child: user?.role === 'DOCTOR' ? appointment.parent.name : (appointment.notes?.split(' - ')[0] || 'Child profile'),
         mode: appointment.professional.chamber ? `Visit: ${appointment.professional.chamber}` : 'Contact provider',
       }
     })
@@ -47,9 +43,11 @@ export default function Appointments() {
             <h1>Appointments</h1>
             <p>Track, join, and book sessions for your children.</p>
           </div>
-          <Button variant="primary" icon={Plus}>Book new appointment</Button>
+          <Link to="/professionals">
+            <Button variant="primary" icon={Plus}>Book new appointment</Button>
+          </Link>
         </div>
-        {session?.user.role === 'DOCTOR' && <p className="appointments__role-note">You are viewing appointments assigned to your professional profile.</p>}
+        {user?.role === 'DOCTOR' && <p className="appointments__role-note">You are viewing appointments assigned to your professional profile.</p>}
         {error && <p className="auth-form__message auth-form__message--error">{error}</p>}
 
         <div className="appointments__tabs">

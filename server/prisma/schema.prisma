@@ -47,6 +47,11 @@ enum AppointmentStatus {
   CANCELLED
 }
 
+enum CommunityPostStatus {
+  PUBLISHED
+  HIDDEN
+}
+
 model User {
   id           String        @id @default(uuid())
   email        String        @unique
@@ -59,6 +64,11 @@ model User {
   appointments Appointment[]
   professional Professional?
   blogPosts    BlogPost[]
+  communityPosts CommunityPost[]
+  comments     Comment[]
+  reactions    Reaction[]
+  reportsMade  Report[]      @relation("ReportReporter")
+  notifications Notification[]
   resourcesCreated Resource[] @relation("ResourceCreatedBy")
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
@@ -79,6 +89,7 @@ model Specialty {
   createdAt DateTime         @default(now())
   doctors   DoctorSpecialty[]
   resources ResourceSpecialty[]
+  communityPosts CommunityPost[]
 }
 
 model Child {
@@ -98,6 +109,9 @@ model Child {
 model Professional {
   id              String        @id @default(uuid())
   name            String
+  // specialty and qualification are cached display strings derived from DoctorSpecialty/DoctorDegree join tables.
+  // They MUST be kept in sync on every write (see auth.js register and professional update).
+  // Consider dropping these in favor of computed values if consistency issues arise.
   specialty       String
   description     String?
   qualification   String?
@@ -235,6 +249,86 @@ model BlogPost {
 
   @@index([status])
   @@index([authorId])
+}
+
+model CommunityPost {
+  id        String                @id @default(uuid())
+  title     String
+  body      String
+  isAnonymous Boolean             @default(false)
+  status    CommunityPostStatus   @default(PUBLISHED)
+  authorId  String
+  author    User                  @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  specialtyId String?
+  specialty Specialty?            @relation(fields: [specialtyId], references: [id], onDelete: SetNull)
+  comments  Comment[]
+  reactions Reaction[]
+  reports   Report[]
+  createdAt DateTime              @default(now())
+  updatedAt DateTime              @updatedAt
+
+  @@index([status, createdAt])
+  @@index([authorId])
+  @@index([specialtyId])
+}
+
+model Comment {
+  id           String   @id @default(uuid())
+  body         String
+  isAnonymous  Boolean  @default(false)
+  isExpertReply Boolean @default(false)
+  authorId     String
+  author       User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  postId       String
+  post         CommunityPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  reports      Report[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([postId, createdAt])
+  @@index([authorId])
+}
+
+model Reaction {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  postId    String
+  post      CommunityPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, postId])
+  @@index([postId])
+}
+
+model Report {
+  id        String   @id @default(uuid())
+  reason    String
+  reporterId String
+  reporter  User     @relation("ReportReporter", fields: [reporterId], references: [id], onDelete: Cascade)
+  postId    String?
+  post      CommunityPost? @relation(fields: [postId], references: [id], onDelete: Cascade)
+  commentId String?
+  comment   Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@index([postId])
+  @@index([commentId])
+  @@index([reporterId])
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String
+  message   String
+  isRead    Boolean  @default(false)
+  link      String?
+  createdAt DateTime @default(now())
+
+  @@index([userId, isRead])
+  @@index([userId, createdAt])
 }
 
 model Appointment {

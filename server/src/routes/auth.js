@@ -15,7 +15,7 @@ function publicUser(user) {
 }
 
 router.post('/register', async (request, response) => {
-  const { name, email, password, role = 'PARENT', professional } = request.body
+  const { name, email, password, role = 'PARENT', professional } = request.body || {}
   if (!name || !email || !password || password.length < 8) {
     return response.status(400).json({ error: 'Name, email, and an 8-character password are required' })
   }
@@ -56,7 +56,7 @@ router.post('/register', async (request, response) => {
 })
 
 router.post('/login', async (request, response) => {
-  const { email, password } = request.body
+  const { email, password } = request.body || {}
   if (!email || !password) return response.status(400).json({ error: 'Email and password are required' })
 
   try {
@@ -73,38 +73,54 @@ router.post('/login', async (request, response) => {
 
 router.patch('/professional', requireAuth, async (request, response) => {
   if (request.user.role !== 'DOCTOR') return response.status(403).json({ error: 'Professional access required' })
-  const { name, professionType, specialties = [], degrees = [], location, chamber, phone, visitingDays, visitingHours, licenseAuthority, licenseNumber, nidNumber, description } = request.body
+  const { name, professionType, specialties = [], degrees = [], location, chamber, phone, visitingDays, visitingHours, licenseAuthority, licenseNumber, nidNumber, description } = request.body || {}
   if (!name?.trim() || !professionType?.trim() || !specialties.length || !degrees.length || !location?.trim() || !visitingDays?.trim() || !visitingHours?.trim() || !nidNumber?.trim()) {
     return response.status(400).json({ error: 'Name, profession, degrees, specialties, location, schedule, and NID are required' })
   }
-  const professional = await prisma.professional.findUnique({ where: { ownerId: request.user.userId } })
-  if (!professional) return response.status(404).json({ error: 'Professional profile not found' })
-  const verificationChanged = professional.professionType !== professionType.trim() || professional.licenseNumber !== (licenseNumber?.trim() || null) || professional.nidNumber !== nidNumber.trim()
-  const updated = await prisma.$transaction(async (transaction) => {
-    await transaction.doctorDegree.deleteMany({ where: { doctorId: professional.id } })
-    await transaction.doctorSpecialty.deleteMany({ where: { doctorId: professional.id } })
-    return transaction.professional.update({ where: { id: professional.id }, data: {
-      name: name.trim(), professionType: professionType.trim(), specialty: specialties.join('; '), qualification: degrees.join(', '),
-      location: location.trim(), chamber: chamber?.trim() || null, chamberAddress: chamber?.trim() || null, phone: phone?.trim() || null,
-      visitingDays: visitingDays.trim(), visitingHours: visitingHours.trim(), licenseAuthority: licenseAuthority?.trim() || null,
-      licenseNumber: licenseNumber?.trim() || null, nidNumber: nidNumber.trim(), description: description?.trim() || null,
-      verificationStatus: verificationChanged ? 'PENDING' : undefined,
-      degrees: { create: degrees.map((degree) => ({ degree: { connectOrCreate: { where: { name: degree.trim() }, create: { name: degree.trim(), isCustom: true } } } })) },
-      specialties: { create: specialties.map((specialty) => ({ specialty: { connectOrCreate: { where: { name: specialty.trim() }, create: { name: specialty.trim(), isCustom: true } } } })) },
-    } })
-  })
-  response.json({ professional: updated })
+
+  try {
+    const professional = await prisma.professional.findUnique({ where: { ownerId: request.user.userId } })
+    if (!professional) return response.status(404).json({ error: 'Professional profile not found' })
+    const verificationChanged = professional.professionType !== professionType.trim() || professional.licenseNumber !== (licenseNumber?.trim() || null) || professional.nidNumber !== nidNumber.trim()
+    const updated = await prisma.$transaction(async (transaction) => {
+      await transaction.user.update({
+        where: { id: request.user.userId },
+        data: { name: name.trim() },
+      })
+      await transaction.doctorDegree.deleteMany({ where: { doctorId: professional.id } })
+      await transaction.doctorSpecialty.deleteMany({ where: { doctorId: professional.id } })
+      return transaction.professional.update({ where: { id: professional.id }, data: {
+        name: name.trim(), professionType: professionType.trim(), specialty: specialties.join('; '), qualification: degrees.join(', '),
+        location: location.trim(), chamber: chamber?.trim() || null, chamberAddress: chamber?.trim() || null, phone: phone?.trim() || null,
+        visitingDays: visitingDays.trim(), visitingHours: visitingHours.trim(), licenseAuthority: licenseAuthority?.trim() || null,
+        licenseNumber: licenseNumber?.trim() || null, nidNumber: nidNumber.trim(), description: description?.trim() || null,
+        verificationStatus: verificationChanged ? 'PENDING' : undefined,
+        degrees: { create: degrees.map((degree) => ({ degree: { connectOrCreate: { where: { name: degree.trim() }, create: { name: degree.trim(), isCustom: true } } } })) },
+        specialties: { create: specialties.map((specialty) => ({ specialty: { connectOrCreate: { where: { name: specialty.trim() }, create: { name: specialty.trim(), isCustom: true } } } })) },
+      } })
+    }, { timeout: 25000, maxWait: 15000 })
+    response.json({ professional: updated })
+  } catch (error) {
+    console.error('Failed to update professional profile:', error)
+    response.status(500).json({ error: error.message || 'Unable to update professional profile' })
+  }
 })
 
 router.post('/certificates', requireAuth, async (request, response) => {
   if (request.user.role !== 'DOCTOR') return response.status(403).json({ error: 'Professional access required' })
-  const { label, fileUrl } = request.body
+  const { label, fileUrl } = request.body || {}
   if (!label?.trim() || !fileUrl?.trim()) return response.status(400).json({ error: 'Certificate label and private storage path are required' })
-  const professional = await prisma.professional.findUnique({ where: { ownerId: request.user.userId } })
-  if (!professional) return response.status(404).json({ error: 'Professional profile not found' })
-  const certificate = await prisma.certificate.create({ data: { doctorId: professional.id, label: label.trim(), fileUrl: fileUrl.trim() } })
-  await prisma.professional.update({ where: { id: professional.id }, data: { verificationStatus: 'PENDING' } })
-  response.status(201).json({ certificate })
+
+  try {
+    const professional = await prisma.professional.findUnique({ where: { ownerId: request.user.userId } })
+    if (!professional) return response.status(404).json({ error: 'Professional profile not found' })
+    const certificate = await prisma.certificate.create({ data: { doctorId: professional.id, label: label.trim(), fileUrl: fileUrl.trim() } })
+    await prisma.professional.update({ where: { id: professional.id }, data: { verificationStatus: 'PENDING' } })
+    response.status(201).json({ certificate })
+  } catch (error) {
+    console.error('Failed to upload certificate:', error)
+    response.status(500).json({ error: error.message || 'Unable to save certificate' })
+  }
 })
 
 export default router

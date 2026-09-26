@@ -8,14 +8,113 @@
 .doctor-dashboard__section h2 { font-size:1.1rem; margin-bottom:14px; }
 .doctor-dashboard__profile, .doctor-dashboard__appointment { border:1px solid var(--border-subtle); border-radius:var(--radius-md); background:var(--bg-surface); padding:16px; }
 .doctor-dashboard__profile p, .doctor-dashboard__appointment p { color:var(--text-secondary); margin:5px 0; font-size:.86rem; }
-.doctor-dashboard__status, .doctor-dashboard__appointment > span { display:inline-block; margin-top:8px; padding:4px 8px; border-radius:999px; background:var(--brand-soft); color:var(--brand); font-size:.74rem; font-weight:600; }
-.doctor-dashboard__appointment { display:flex; justify-content:space-between; gap:16px; margin-bottom:10px; }
+.doctor-dashboard__status { display:inline-block; margin-top:8px; padding:4px 8px; border-radius:999px; background:var(--brand-soft); color:var(--brand); font-size:.74rem; font-weight:600; }
+
+.doctor-dashboard__appointment {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.doctor-dashboard__appointment-ctrls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding-top: 8px;
+  border-top: 1px solid var(--border-subtle);
+}
+.doctor-dashboard__actions-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.doctor-dashboard__status-badge {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+.doctor-dashboard__status-badge--requested { background: #fef3c7; color: #92400e; }
+.doctor-dashboard__status-badge--confirmed { background: #d1fae5; color: #065f46; }
+.doctor-dashboard__status-badge--completed { background: #e0e7ff; color: #3730a3; }
+.doctor-dashboard__status-badge--cancelled { background: #fee2e2; color: #991b1b; }
+
+.doctor-dashboard__reschedule-form {
+  margin-top: 10px;
+  padding: 12px;
+  background: var(--bg-surface-alt);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.doctor-dashboard__reschedule-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+.doctor-dashboard__reschedule-form input {
+  padding: 8px 10px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  font: inherit;
+  font-size: 0.9rem;
+}
+.doctor-dashboard__reschedule-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.doctor-dashboard__form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.doctor-dashboard__post { display:grid; gap:12px; max-width:720px; }
+.doctor-dashboard__post label { display:flex; flex-direction:column; gap:4px; font-size:0.85rem; font-weight:500; }
+.doctor-dashboard__post input, .doctor-dashboard__post textarea, .doctor-dashboard__post select {
+  padding: 10px 12px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  font: inherit;
+}
+.doctor-dashboard__msg { color: var(--brand); font-size: 0.88rem; font-weight: 500; }
+
+.doctor-dashboard__resources-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+}
+.doctor-dashboard__resource-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  background: var(--bg-surface);
+  font-size: 0.88rem;
+}
+
 .doctor-dashboard__section-head { display:flex; justify-content:space-between; align-items:center; }
-.doctor-dashboard__section-head button, .doctor-dashboard__appointment button, .doctor-dashboard__profile-form button { border:1px solid var(--border-subtle); border-radius:var(--radius-sm); padding:8px 10px; background:var(--bg-surface); color:var(--text-primary); font:inherit; }
 .doctor-dashboard__profile-form { display:grid; grid-template-columns:repeat(2, 1fr); gap:10px; }
 .doctor-dashboard__profile-form input, .doctor-dashboard__profile-form textarea { padding:10px; border:1px solid var(--border-subtle); border-radius:var(--radius-sm); background:var(--bg-surface); color:var(--text-primary); font:inherit; }
 .doctor-dashboard__profile-form textarea, .doctor-dashboard__profile-form button, .doctor-dashboard__profile-form p { grid-column:1 / -1; }
-.doctor-dashboard__post { display:grid; gap:10px; max-width:720px; }
-.doctor-dashboard__post input, .doctor-dashboard__post textarea, .doctor-dashboard__post button { padding:11px 12px; border:1px solid var(--border-subtle); border-radius:var(--radius-sm); background:var(--bg-surface); color:var(--text-primary); font:inherit; }
-.doctor-dashboard__post button { background:var(--brand); color:var(--text-on-brand); border-color:var(--brand); font-weight:600; }
-@media (max-width:600px) { .doctor-dashboard__header { align-items:flex-start; flex-direction:column; } }
+
+@media (max-width:600px) {
+  .doctor-dashboard__header { align-items:flex-start; flex-direction:column; }
+  .doctor-dashboard__form-grid { grid-template-columns: 1fr; }
+  .doctor-dashboard__profile-form { grid-template-columns: 1fr; }
+}

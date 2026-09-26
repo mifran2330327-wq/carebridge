@@ -1,0 +1,131 @@
+.create-post {
+  padding-bottom: 70px;
+}
+
+.create-post__card {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+
+.create-post__header {
+  margin-bottom: 24px;
+}
+
+.create-post__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.85rem;
+  padding: 8px 0;
+}
+
+.create-post__back:hover {
+  color: var(--brand);
+}
+
+.create-post__card h1 {
+  font-size: 1.6rem;
+  margin-bottom: 6px;
+}
+
+.create-post__subtitle {
+  color: var(--text-secondary);
+  margin: 0 0 24px;
+}
+
+.create-post__form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.create-post__field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.create-post__field label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.create-post__field input,
+.create-post__field textarea,
+.create-post__field select {
+  padding: 10px 12px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  font: inherit;
+  font-size: 0.95rem;
+}
+
+.create-post__field input:focus,
+.create-post__field textarea:focus,
+.create-post__field select:focus {
+  outline: none;
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px var(--brand-soft);
+}
+
+.create-post__field textarea {
+  resize: vertical;
+  min-height: 180px;
+  line-height: 1.6;
+}
+
+.create-post__checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  padding-top: 4px;
+}
+
+.create-post__checkbox input {
+  margin-top: 2px;
+  width: 16px;
+  height: 16px;
+  accent-color: var(--brand);
+}
+
+.create-post__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border-subtle);
+  margin-top: 8px;
+}
+
+.create-post__message {
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+}
+
+.create-post__message--error {
+  background: var(--error-soft);
+  color: var(--error);
+  border: 1px solid var(--error-border);
+}
+
+.create-post__message--success {
+  background: var(--success-soft);
+  color: var(--success);
+  border: 1px solid var(--success-border);
+}
+
+@media (max-width: 600px) {
+  .create-post__card {
+    padding: 20px 16px;
+  }
+}

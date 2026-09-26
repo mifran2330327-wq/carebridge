@@ -4,7 +4,6 @@ import SearchBar from '../../components/SearchBar/SearchBar.jsx'
 import MapPanel from '../../components/MapPanel/MapPanel.jsx'
 import ProfessionalCard from '../../components/ProfessionalCard/ProfessionalCard.jsx'
 import SchoolCard from '../../components/SchoolCard/SchoolCard.jsx'
-import { professionals as fallbackProfessionals, schools as fallbackSchools } from '../../data/mockData.js'
 import { getDirectory } from '../../lib/api.js'
 import { normalizeInstitution, normalizeProfessional } from '../../lib/directory.js'
 import './SmartSearch.css'
@@ -18,14 +17,27 @@ export default function SmartSearch() {
   const [tab, setTab] = useState('professionals')
   const [query, setQuery] = useState('')
   const [location, setLocation] = useState('')
-  const [directory, setDirectory] = useState({ professionals: fallbackProfessionals, schools: fallbackSchools })
+  const [directory, setDirectory] = useState({ professionals: [], schools: [] })
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
   useEffect(() => {
-    getDirectory().then(({ professionals: providerRows, institutions }) => {
-      const professionals = providerRows.map(normalizeProfessional)
-      const schools = institutions.map(normalizeInstitution)
-      setDirectory({ professionals: professionals.length ? professionals : fallbackProfessionals, schools: schools.length ? schools : fallbackSchools })
-    }).catch(() => {})
+    setLoading(true)
+    setError(null)
+    getDirectory()
+      .then(({ professionals: providerRows, institutions }) => {
+        const professionals = (providerRows || []).map(normalizeProfessional)
+        const schools = (institutions || []).map(normalizeInstitution)
+        setDirectory({
+          professionals,
+          schools,
+        })
+      })
+      .catch((err) => {
+        console.error('Failed to load search data from database:', err)
+        setError('Unable to load database directory. Please check the server connection.')
+      })
+      .finally(() => setLoading(false))
   }, [])
 
   const source = tab === 'professionals' ? directory.professionals : directory.schools
@@ -38,13 +50,15 @@ export default function SmartSearch() {
       item.location,
       item.specialties?.join(' '),
       item.facilities?.join(' '),
+      item.visitingDays,
+      item.chamber,
     ]
       .filter(Boolean)
       .join(' ')
       .toLowerCase()
 
     const matchesQuery = !query || haystack.includes(query.trim().toLowerCase())
-    const matchesLocation = !location || item.location.toLowerCase().includes(location.trim().toLowerCase())
+    const matchesLocation = !location || (item.location && item.location.toLowerCase().includes(location.trim().toLowerCase()))
 
     return matchesQuery && matchesLocation
   })
@@ -54,7 +68,7 @@ export default function SmartSearch() {
       <div className="container">
         <div className="smart-search__header">
           <h1>Smart Search</h1>
-          <p>Search and see results plotted on the map, sorted by distance from you.</p>
+          <p>Search doctors, therapists, and schools from the database plotted on the map.</p>
         </div>
 
         <SearchBar
@@ -62,6 +76,7 @@ export default function SmartSearch() {
           onChange={setQuery}
           location={location}
           onLocationChange={setLocation}
+          placeholder={tab === 'professionals' ? "Search doctor name, specialty, or hospital..." : "Search school or care center..."}
           onFilterClick={() => {}}
         />
 
@@ -76,9 +91,12 @@ export default function SmartSearch() {
             </button>
           ))}
           <span className="smart-search__count mono">
-            <ListFilter size={14} /> {filteredResults.length} results
+            <ListFilter size={14} /> {filteredResults.length} database results
           </span>
         </div>
+
+        {error && <div className="smart-search__error" role="alert">{error}</div>}
+        {loading && <div className="smart-search__loading">Loading database directory...</div>}
 
         <div className="smart-search__layout">
           <div className="smart-search__results">
@@ -90,9 +108,9 @@ export default function SmartSearch() {
                   <SchoolCard key={item.id} school={item} />
                 ),
               )
-            ) : (
-              <div className="smart-search__empty">No results match your current search.</div>
-            )}
+            ) : !loading ? (
+              <div className="smart-search__empty">No database entries match your search criteria.</div>
+            ) : null}
           </div>
           <div className="smart-search__map">
             <MapPanel places={filteredResults} />
