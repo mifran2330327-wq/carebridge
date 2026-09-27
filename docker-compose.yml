@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: carebridge-db
+    environment:
+      POSTGRES_USER: carebridge
+      POSTGRES_PASSWORD: carebridge
+      POSTGRES_DB: carebridge
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U carebridge -d carebridge"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Backend API
+  backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: carebridge-backend
+    environment:
+      DATABASE_URL: "postgresql://carebridge:carebridge@postgres:5432/carebridge?schema=public"
+      DIRECT_URL: "postgresql://carebridge:carebridge@postgres:5432/carebridge?schema=public"
+      PORT: 5000
+      JWT_SECRET: ${JWT_SECRET:-your-super-secret-jwt-key-change-in-production}
+      ALGOLIA_APP_ID: ${ALGOLIA_APP_ID}
+      ALGOLIA_ADMIN_KEY: ${ALGOLIA_ADMIN_KEY}
+      ALGOLIA_INDEX: ${ALGOLIA_INDEX:-carebridge_content}
+    ports:
+      - "5000:5000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+
+  # Frontend (Vite dev server with proxy)
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: carebridge-frontend
+    environment:
+      VITE_API_URL: /api
+      VITE_ALGOLIA_APP_ID: ${VITE_ALGOLIA_APP_ID}
+      VITE_ALGOLIA_SEARCH_KEY: ${VITE_ALGOLIA_SEARCH_KEY}
+      VITE_ALGOLIA_INDEX: ${VITE_ALGOLIA_INDEX:-carebridge_content}
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+    volumes:
+      - .:/app
+      - /app/node_modules
+
+volumes:
+  postgres_data:
