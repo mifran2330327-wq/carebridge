@@ -136,10 +136,31 @@ export default function Home() {
           description="Verified pediatric neurologists and specialists currently accepting consultations."
         />
         <div className="home-pro-grid">
-          {professionals.slice(0, 3).map((p) => (
-            <ProfessionalCard key={p.id} professional={p} />
-          ))}
-        </div>
+  {professionals.length > 0 ? (
+    professionals.slice(0, 3).map((p) => (
+      <ProfessionalCard key={p.id} professional={p} />
+    ))
+  ) : (
+    <div className="home-pro-empty">
+      <div className="home-pro-empty__icon">
+        <Stethoscope size={24} />
+      </div>
+
+      <h3>Explore verified specialists</h3>
+
+      <p>
+        Find doctors and specialists by specialty and location
+        from our verified database.
+      </p>
+
+      <Link to="/professionals">
+        <Button variant="outline" icon={ArrowRight}>
+          Browse professionals
+        </Button>
+      </Link>
+    </div>
+  )}
+</div>
         <div className="home-section__more">
           <Link to="/professionals"><Button variant="outline" icon={ArrowRight}>See all {counts.doctors} professionals</Button></Link>
         </div>

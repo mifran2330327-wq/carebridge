@@ -117,7 +117,7 @@ export default function Signup() {
                 placeholder="you@example.com"
                 value={form.email}
                 onChange={handleChange}
-                required
+                required={['location', 'visitingDays', 'visitingHours', 'nidNumber'].includes(name)}
               />
             </div>
           </label>

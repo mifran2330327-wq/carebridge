@@ -342,3 +342,147 @@
     text-align: center;
   }
 }
+/* ================================
+   Navbar Visual Polish
+   ================================ */
+
+.navbar {
+  background: color-mix(in srgb, var(--bg-surface) 92%, transparent);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.03);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.navbar__inner {
+  height: 4.5rem;
+}
+
+/* Brand */
+.navbar__brand {
+  gap: 0.7rem;
+  font-size: 1.12rem;
+  letter-spacing: -0.015em;
+}
+
+.navbar__logo {
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 0.7rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition:
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.navbar__brand:hover .navbar__logo {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+/* Navigation */
+.navbar__links {
+  gap: 0.25rem;
+}
+
+.navbar__link {
+  padding: 0.55rem 0.85rem;
+  border-radius: 0.65rem;
+  font-size: 0.88rem;
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.navbar__link:hover {
+  transform: translateY(-1px);
+}
+
+.navbar__link--active {
+  font-weight: 600;
+}
+
+/* Right-side actions */
+.navbar__actions {
+  gap: 0.6rem;
+}
+
+/* Notification */
+.navbar__notify-btn {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.7rem;
+  background: transparent;
+  border-color: transparent;
+}
+
+.navbar__notify-btn:hover {
+  background: var(--bg-surface-alt);
+  border-color: var(--border-subtle);
+}
+
+/* Account */
+.navbar__account-toggle {
+  min-height: 2.5rem;
+  padding: 0.45rem 0.7rem;
+  border-radius: 0.7rem;
+  background: transparent;
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.navbar__account-toggle:hover {
+  background: var(--bg-surface-alt);
+  border-color: var(--border-subtle);
+}
+
+/* Login / signup buttons */
+.navbar__link-desktop .button {
+  border-radius: 0.65rem;
+}
+
+/* Dropdowns */
+.navbar__notify-dropdown,
+.navbar__account-menu {
+  border-radius: 0.85rem;
+  box-shadow: var(--shadow-lg);
+  animation: navbar-dropdown-in 0.16s ease-out;
+}
+
+@keyframes navbar-dropdown-in {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mobile burger */
+.navbar__burger {
+  width: 2.5rem;
+  height: 2.5rem;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.7rem;
+}
+
+.navbar__burger:hover {
+  background: var(--bg-surface-alt);
+}
+
+/* Mobile */
+@media (max-width: 860px) {
+  .navbar__inner {
+    height: 4.25rem;
+  }
+
+  .navbar__burger {
+    display: flex;
+  }
+}

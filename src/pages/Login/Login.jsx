@@ -87,7 +87,7 @@ export default function Login() {
             <label className="auth-form__checkbox">
               <input type="checkbox" /> Remember me
             </label>
-            <a href="#" className="auth-form__link">Forgot password?</a>
+            <span className="auth-form__link">Forgot password?</span>
           </div>
 
           {error && <p className="auth-form__message auth-form__message--error" role="alert">{error}</p>}

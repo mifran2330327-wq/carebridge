@@ -20,6 +20,10 @@ export default function SmartSearch() {
   const [directory, setDirectory] = useState({ professionals: [], schools: [] })
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [showFilters, setShowFilters] = useState(false)
+  const [specialtyFilter, setSpecialtyFilter] = useState('')
+const [verifiedOnly, setVerifiedOnly] = useState(false)
+const [sortBy, setSortBy] = useState('relevance')
 
   useEffect(() => {
     setLoading(true)
@@ -77,7 +81,7 @@ export default function SmartSearch() {
           location={location}
           onLocationChange={setLocation}
           placeholder={tab === 'professionals' ? "Search doctor name, specialty, or hospital..." : "Search school or care center..."}
-          onFilterClick={() => {}}
+          onFilterClick={() => setShowFilters(true)}
         />
 
         <div className="smart-search__tabs">
@@ -94,6 +98,61 @@ export default function SmartSearch() {
             <ListFilter size={14} /> {filteredResults.length} database results
           </span>
         </div>
+        {showFilters && (
+  <div className="filter-box">
+    <h2>Search Filters</h2>
+
+    <div className="filter-field">
+      <label htmlFor="specialty-filter">Specialty</label>
+
+      <select
+        id="specialty-filter"
+        value={specialtyFilter}
+        onChange={(e) => setSpecialtyFilter(e.target.value)}
+      >
+        <option value="">All specialties</option>
+        <option value="Autism">Autism</option>
+        <option value="Neurology">Neurology</option>
+        <option value="Speech Therapy">Speech Therapy</option>
+        <option value="Occupational Therapy">
+          Occupational Therapy
+        </option>
+      </select>
+    </div>
+
+    <div className="filter-field">
+      <label>
+        <input
+          type="checkbox"
+          checked={verifiedOnly}
+          onChange={(e) => setVerifiedOnly(e.target.checked)}
+        />
+
+        {' '}Verified professionals only
+      </label>
+    </div>
+
+    <div className="filter-field">
+      <label htmlFor="sort-filter">Sort by</label>
+
+      <select
+        id="sort-filter"
+        value={sortBy}
+        onChange={(e) => setSortBy(e.target.value)}
+      >
+        <option value="relevance">Relevance</option>
+        <option value="name">Name</option>
+      </select>
+    </div>
+
+    <button
+      type="button"
+      onClick={() => setShowFilters(false)}
+    >
+      Apply Filters
+    </button>
+  </div>
+)}
 
         {error && <div className="smart-search__error" role="alert">{error}</div>}
         {loading && <div className="smart-search__loading">Loading database directory...</div>}

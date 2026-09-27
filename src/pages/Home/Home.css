@@ -377,3 +377,685 @@
     justify-content: center;
   }
 }
+/* ================================
+   Home Page Visual Polish
+   ================================ */
+
+.home-hero {
+  position: relative;
+  overflow: hidden;
+}
+
+.home-hero::before {
+  content: '';
+  position: absolute;
+  width: 420px;
+  height: 420px;
+  border-radius: 50%;
+  background: var(--brand-soft);
+  opacity: 0.45;
+  filter: blur(20px);
+  right: -120px;
+  top: -140px;
+  pointer-events: none;
+}
+
+.home-hero__inner {
+  position: relative;
+  z-index: 1;
+}
+
+.home-hero__title {
+  max-width: 720px;
+  letter-spacing: -0.035em;
+}
+
+.home-hero__subtitle {
+  line-height: 1.7;
+}
+
+.home-hero__cta-row {
+  margin-top: 0.25rem;
+}
+
+/* Hero right side */
+.home-hero__visual {
+  min-height: 360px;
+  position: relative;
+  border-radius: 28px;
+  background:
+    linear-gradient(
+      145deg,
+      var(--brand-soft),
+      var(--bg-surface)
+    );
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-md);
+  overflow: visible;
+}
+
+/* Main AI card */
+.home-hero__card--main {
+  width: 260px;
+  bottom: 28px;
+  left: 24px;
+  padding: 1.5rem;
+}
+
+/* Floating cards */
+.home-hero__card--float-1 {
+  top: 28px;
+  right: 24px;
+}
+
+.home-hero__card--float-2 {
+  top: 48%;
+  right: -18px;
+}
+
+/* Give cards a little depth */
+.home-hero__card {
+  backdrop-filter: blur(8px);
+}
+
+/* Stats */
+.home-stats {
+  position: relative;
+  z-index: 2;
+}
+
+.home-stats > * {
+  transition:
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.home-stats > *:hover {
+  transform: translateY(-3px);
+}
+
+/* Feature cards */
+.home-feature-card {
+  transition:
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.home-feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--brand);
+}
+
+/* Professional section */
+.home-pro-grid {
+  min-height: 180px;
+}
+
+/* CTA */
+.home-cta {
+  box-shadow: var(--shadow-md);
+}
+/* ---------------- Professional empty state ---------------- */
+
+.home-pro-empty {
+  grid-column: 1 / -1;
+  min-height: 220px;
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+  background: var(--bg-surface);
+  border: 1px dashed var(--border-subtle);
+  border-radius: var(--radius-lg);
+}
+
+.home-pro-empty__icon {
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 1rem;
+  border-radius: 50%;
+
+  background: var(--brand-soft);
+  color: var(--brand);
+}
+
+.home-pro-empty h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1.1rem;
+}
+
+.home-pro-empty p {
+  max-width: 430px;
+  margin: 0 0 1.25rem;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+/* ---------------- Feature section polish ---------------- */
+
+.home-features {
+  gap: 1rem;
+}
+
+.home-feature-card {
+  position: relative;
+  padding: 1.5rem;
+  min-height: 185px;
+  overflow: hidden;
+  background: var(--bg-surface);
+}
+
+.home-feature-card::after {
+  content: '';
+  position: absolute;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: var(--brand-soft);
+  opacity: 0.45;
+  right: -35px;
+  bottom: -35px;
+  pointer-events: none;
+  transition: transform var(--transition-fast);
+}
+
+.home-feature-card:hover::after {
+  transform: scale(1.4);
+}
+
+.home-feature-card__icon {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 0.75rem;
+  margin-bottom: 1.25rem;
+  position: relative;
+  z-index: 1;
+}
+
+.home-feature-card h3,
+.home-feature-card p {
+  position: relative;
+  z-index: 1;
+}
+
+.home-feature-card h3 {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.home-feature-card p {
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+/* ---------------- Hero visual polish ---------------- */
+
+.home-hero__visual {
+  isolation: isolate;
+}
+
+/* Soft decorative circles */
+.home-hero__visual::before {
+  content: '';
+  position: absolute;
+  width: 190px;
+  height: 190px;
+  border-radius: 50%;
+  background: var(--teal-50);
+  top: 35px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: -1;
+}
+
+.home-hero__visual::after {
+  content: '';
+  position: absolute;
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  border: 1px solid var(--border-subtle);
+  right: 35px;
+  bottom: 25px;
+  z-index: -1;
+}
+
+/* Main AI guide card */
+.home-hero__card--main {
+  border-radius: 18px;
+  padding: 1.5rem;
+  box-shadow: var(--shadow-lg);
+}
+
+.home-hero__card--main > svg {
+  width: 42px;
+  height: 42px;
+  padding: 9px;
+  border-radius: 12px;
+  background: var(--brand-soft);
+  color: var(--brand);
+}
+
+.home-hero__card-title {
+  font-size: 1rem;
+  margin-top: 0.9rem;
+}
+
+.home-hero__card-text {
+  line-height: 1.55;
+}
+
+/* Floating verification cards */
+.home-hero__card--float-1,
+.home-hero__card--float-2 {
+  border-radius: 12px;
+  box-shadow: var(--shadow-md);
+  background: var(--bg-surface);
+  white-space: nowrap;
+}
+
+.home-hero__card--float-1 svg,
+.home-hero__card--float-2 svg {
+  color: var(--success);
+  flex-shrink: 0;
+}
+
+/* Small lift animation */
+@keyframes home-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.home-hero__card--float-1 {
+  animation: home-float 4s ease-in-out infinite;
+}
+
+.home-hero__card--float-2 {
+  animation: home-float 4s ease-in-out 1.2s infinite;
+}
+
+/* Keep animation subtle on smaller screens */
+@media (prefers-reduced-motion: reduce) {
+  .home-hero__card--float-1,
+  .home-hero__card--float-2 {
+    animation: none;
+  }
+}
+/* ================================
+   Home Stats Section Polish
+   ================================ */
+
+.home-stats {
+  gap: 1rem;
+  margin-top: 2.25rem;
+  margin-bottom: 3.5rem;
+}
+
+/* Individual stat cards */
+.home-stats > * {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  background: var(--bg-surface);
+  transition:
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+/* Subtle decorative circle */
+.home-stats > *::after {
+  content: '';
+  position: absolute;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  right: -35px;
+  bottom: -40px;
+  background: var(--brand-soft);
+  opacity: 0.45;
+  pointer-events: none;
+  transition: transform var(--transition-fast);
+}
+
+.home-stats > *:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--brand);
+}
+
+.home-stats > *:hover::after {
+  transform: scale(1.35);
+}
+
+/* Keep stat content above decoration */
+.home-stats > * > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Better spacing */
+.home-stats .stat-card {
+  min-height: 125px;
+}
+
+/* Responsive */
+@media (max-width: 980px) {
+  .home-stats {
+    margin-top: 2rem;
+    margin-bottom: 3rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .home-stats {
+    gap: 0.85rem;
+    margin-top: 1.5rem;
+    margin-bottom: 2.75rem;
+  }
+
+  .home-stats .stat-card {
+    min-height: 110px;
+  }
+}
+/* ================================
+   Feature Section — Section Heading
+   ================================ */
+
+.home-section {
+  margin-bottom: 5.5rem;
+}
+
+/* Give section headings a stronger visual hierarchy */
+.home-section .section-heading {
+  margin-bottom: 2rem;
+}
+
+/* Eyebrow */
+.home-section .section-heading__eyebrow {
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Main section title */
+.home-section .section-heading__title {
+  max-width: 680px;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+}
+
+/* Description */
+.home-section .section-heading__description {
+  max-width: 650px;
+  margin-top: 0.75rem;
+  line-height: 1.65;
+}
+
+/* Feature grid */
+.home-features {
+  margin-top: 0.5rem;
+}
+
+/* Better visual grouping */
+.home-feature-card {
+  min-height: 185px;
+}
+
+/* Keep mobile spacing comfortable */
+@media (max-width: 600px) {
+  .home-section {
+    margin-bottom: 3.75rem;
+  }
+
+  .home-section .section-heading {
+    margin-bottom: 1.5rem;
+  }
+
+  .home-section .section-heading__title {
+    font-size: 1.7rem;
+  }
+}
+/* ================================
+   Professionals Section Polish
+   ================================ */
+
+.home-pro-grid {
+  gap: 1.25rem;
+  margin-top: 0.5rem;
+}
+
+/* Professional cards */
+.home-pro-grid > * {
+  min-width: 0;
+  transition:
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.home-pro-grid > *:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Empty state should remain centered */
+.home-pro-empty {
+  transition:
+    border-color var(--transition-fast),
+    background var(--transition-fast);
+}
+
+.home-pro-empty:hover {
+  border-color: var(--brand);
+}
+
+/* See all button area */
+.home-section__more {
+  margin-top: 2rem;
+}
+
+.home-section__more a {
+  text-decoration: none;
+}
+
+/* Give the section a little separation */
+.home-section:has(.home-pro-grid) {
+  padding-top: 0.5rem;
+}
+
+/* Tablet */
+@media (max-width: 980px) {
+  .home-pro-grid {
+    gap: 1rem;
+  }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .home-section__more {
+    margin-top: 1.5rem;
+  }
+
+  .home-pro-grid {
+    gap: 1rem;
+  }
+}
+/* ================================
+   CTA Banner Polish
+   ================================ */
+
+.home-cta {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+
+  min-height: 190px;
+  padding: 2.5rem 3rem;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--brand) 0%,
+      var(--teal-800) 100%
+    );
+
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Decorative circle */
+.home-cta::before {
+  content: '';
+  position: absolute;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  right: -80px;
+  top: -110px;
+
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.04);
+
+  pointer-events: none;
+}
+
+/* Second decorative circle */
+.home-cta::after {
+  content: '';
+  position: absolute;
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  right: 150px;
+  bottom: -90px;
+
+  background: rgba(255, 255, 255, 0.05);
+  pointer-events: none;
+}
+
+/* Keep actual content above decorations */
+.home-cta > * {
+  position: relative;
+  z-index: 1;
+}
+
+.home-cta h2 {
+  font-size: clamp(1.35rem, 2.2vw, 1.7rem);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+
+.home-cta p {
+  max-width: 580px;
+  line-height: 1.6;
+}
+
+/* CTA button */
+.home-cta a {
+  flex-shrink: 0;
+}
+
+/* Mobile */
+@media (max-width: 700px) {
+  .home-cta {
+    min-height: auto;
+    padding: 2rem 1.5rem;
+    text-align: center;
+  }
+
+  .home-cta p {
+    margin-inline: auto;
+  }
+
+  .home-cta {
+    justify-content: center;
+  }
+}
+/* Space between Professionals section and CTA */
+
+.home-section:has(.home-pro-grid) {
+  margin-bottom: 4rem;
+}
+
+@media (max-width: 980px) {
+  .home-section:has(.home-pro-grid) {
+    margin-bottom: 3.25rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .home-section:has(.home-pro-grid) {
+    margin-bottom: 2.75rem;
+  }
+}
+/* Final CTA-to-footer spacing */
+.home-cta {
+  margin-bottom: 4rem;
+}
+
+@media (max-width: 600px) {
+  .home-cta {
+    margin-bottom: 3rem;
+  }
+}
+/* ================================
+   Final Home Page Spacing Rhythm
+   ================================ */
+
+.home-section {
+  margin-bottom: 5rem;
+}
+
+/* Professionals → CTA */
+.home-section:has(.home-pro-grid) {
+  margin-bottom: 4rem;
+}
+
+/* CTA → Footer */
+.home-cta {
+  margin-bottom: 4rem;
+}
+
+/* Mobile rhythm */
+@media (max-width: 980px) {
+  .home-section {
+    margin-bottom: 4rem;
+  }
+
+  .home-section:has(.home-pro-grid) {
+    margin-bottom: 3.25rem;
+  }
+
+  .home-cta {
+    margin-bottom: 3.25rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .home-section {
+    margin-bottom: 3.5rem;
+  }
+
+  .home-section:has(.home-pro-grid) {
+    margin-bottom: 2.75rem;
+  }
+
+  .home-cta {
+    margin-bottom: 3rem;
+  }
+}
