@@ -1,41 +1,54 @@
+/* ==========================================================================
+   Footer Styles
+   --------------------------------------------------------------------------
+   Same 8px-based rem scale as the rest of the page:
+     0.25rem 0.5rem 0.75rem 1rem 1.25rem 1.5rem 2rem 2.5rem 3rem 3.5rem
+   ========================================================================== */
+
 .footer {
   background: var(--bg-surface);
   border-top: 1px solid var(--border-subtle);
-  margin-top: 80px;
+  /* No margin-top here on purpose — every page already ends with its own
+     bottom padding/margin (see .page, .directory, .dashboard, etc.), so
+     adding one here on top of that was doubling up the whitespace above
+     the footer. */
 }
 
 .footer__inner {
   display: grid;
   grid-template-columns: 1.6fr 1fr 1fr 1fr;
-  gap: 32px;
-  padding: 56px 24px 40px;
+  gap: 2rem;
+  /* Fluid so the footer doesn't carry full desktop padding onto mobile;
+     bottom padding is intentionally lighter than top since the
+     .footer__bottom bar below adds its own space after the divider. */
+  padding: clamp(2.5rem, 5vw, 3rem) clamp(1.25rem, 4vw, 1.5rem) 2rem;
 }
 
 .footer__brand {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 0.5rem;
   font-weight: 700;
   font-size: 1.1rem;
   color: var(--brand);
-  margin-bottom: 12px;
+  margin-bottom: 0.75rem;
 }
 
 .footer__tagline {
   color: var(--text-muted);
   font-size: 0.9rem;
-  max-width: 280px;
+  max-width: 17.5rem;
 }
 
 .footer__socials {
   display: flex;
-  gap: 12px;
-  margin-top: 16px;
+  gap: 0.75rem;
+  margin-top: 1rem;
 }
 
 .footer__socials a {
-  width: 34px;
-  height: 34px;
+  width: 2.25rem;
+  height: 2.25rem;
   border-radius: 50%;
   background: var(--bg-surface-alt);
   color: var(--text-secondary);
@@ -53,7 +66,7 @@
 .footer__col {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 0.75rem;
 }
 
 .footer__col h4 {
@@ -61,7 +74,7 @@
   text-transform: uppercase;
   letter-spacing: 0.04em;
   color: var(--text-muted);
-  margin-bottom: 4px;
+  margin-bottom: 0.25rem;
 }
 
 .footer__col a {
@@ -76,7 +89,7 @@
 
 .footer__bottom {
   border-top: 1px solid var(--border-subtle);
-  padding: 18px 24px;
+  padding: 1.25rem clamp(1.25rem, 4vw, 1.5rem);
 }
 
 .footer__bottom p {
@@ -88,5 +101,23 @@
 @media (max-width: 760px) {
   .footer__inner {
     grid-template-columns: 1fr 1fr;
+    gap: 1.75rem 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer__inner {
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
+    padding: 2rem 1.25rem 1.75rem;
+  }
+
+  .footer__tagline {
+    max-width: none;
+  }
+
+  .footer__bottom {
+    padding: 1rem 1.25rem;
+    text-align: center;
   }
 }

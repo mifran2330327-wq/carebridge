@@ -1,17 +1,26 @@
+/* ==========================================================================
+   Dashboard Styles
+   --------------------------------------------------------------------------
+   Same rem scale as the rest of the app:
+     0.125rem 0.25rem 0.5rem 0.625rem 0.75rem 0.875rem 1rem 1.25rem
+     1.5rem 1.75rem 2rem 2.5rem 2.75rem 3rem 3.5rem 4rem
+   ========================================================================== */
+
 .dashboard {
-  padding-bottom: 60px;
+  /* Fluid so the page doesn't end in the same large gap on mobile as on desktop */
+  padding-bottom: clamp(2.5rem, 6vw, 4rem);
 }
 
 .dashboard__header {
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 24px 0 36px;
+  gap: 1rem;
+  padding: clamp(1.25rem, 3vw, 1.5rem) 0 clamp(1.75rem, 4vw, 2.25rem);
 }
 
 .dashboard__avatar {
-  width: 54px;
-  height: 54px;
+  width: 3.5rem;
+  height: 3.5rem;
   border-radius: 50%;
   background: var(--brand);
   color: var(--text-on-brand);
@@ -20,6 +29,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .dashboard__title {
@@ -28,20 +38,20 @@
 }
 
 .dashboard__subtitle {
-  margin: 2px 0 0;
+  margin: 0.125rem 0 0;
   color: var(--text-muted);
   font-size: 0.88rem;
 }
 
 .dashboard__section {
-  margin-bottom: 44px;
+  margin-bottom: 2.75rem;
 }
 
 .dashboard__section-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 18px;
+  margin-bottom: 1.25rem;
 }
 
 .dashboard__section-head h2 {
@@ -49,7 +59,7 @@
   margin: 0;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 0.5rem;
 }
 
 .dashboard__sparkle {
@@ -65,15 +75,15 @@
 .dashboard__children-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 18px;
+  gap: 1.25rem;
 }
 
 .child-form {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
-  margin-bottom: 18px;
-  padding: 16px;
+  gap: 0.625rem;
+  margin-bottom: 1.25rem;
+  padding: 1rem;
   background: var(--bg-surface-alt);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
@@ -83,7 +93,7 @@
 .child-form textarea {
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-sm);
-  padding: 10px 12px;
+  padding: 0.625rem 0.75rem;
   background: var(--bg-surface);
   color: var(--text-primary);
   font: inherit;
@@ -94,28 +104,28 @@
 .dashboard__split {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 32px;
+  gap: 2rem;
 }
 
 .dashboard__appointments {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 0.75rem;
 }
 
 .appointment-row {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 0.875rem;
   background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
-  padding: 14px 16px;
+  padding: 0.875rem 1rem;
 }
 
 .appointment-row__icon {
-  width: 38px;
-  height: 38px;
+  width: 2.5rem;
+  height: 2.5rem;
   border-radius: var(--radius-sm);
   background: var(--brand-soft);
   color: var(--brand);
@@ -137,7 +147,7 @@
 }
 
 .appointment-row__meta {
-  margin: 2px 0 0;
+  margin: 0.125rem 0 0;
   font-size: 0.78rem;
   color: var(--text-muted);
 }
@@ -156,22 +166,53 @@
 .dashboard__recs {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 0.75rem;
 }
 
 @media (max-width: 900px) {
   .dashboard__split {
     grid-template-columns: 1fr;
+    gap: 1.5rem;
   }
+
   .dashboard__children-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .dashboard__section {
+    margin-bottom: 2.25rem;
   }
 }
 
 @media (max-width: 560px) {
+  .dashboard__header {
+    gap: 0.75rem;
+    padding: 1.25rem 0 1.5rem;
+  }
+
+  .dashboard__avatar {
+    width: 3rem;
+    height: 3rem;
+    font-size: 1.05rem;
+  }
+
+  .dashboard__section {
+    margin-bottom: 2rem;
+  }
+
+  .dashboard__section-head {
+    margin-bottom: 1rem;
+  }
+
   .child-form { grid-template-columns: 1fr; }
   .child-form textarea { grid-column: auto; }
+
   .dashboard__children-grid {
     grid-template-columns: 1fr;
+  }
+
+  .appointment-row {
+    padding: 0.75rem;
+    gap: 0.75rem;
   }
 }
