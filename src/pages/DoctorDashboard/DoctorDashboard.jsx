@@ -92,7 +92,7 @@ export default function DoctorDashboard() {
       setRescheduleTime('')
       setError('')
     } catch (err) {
-      setError(err.message)
+      setError(err.message || 'Failed to reschedule appointment. The new time may be outside the doctor\'s availability.')
     }
   }
 

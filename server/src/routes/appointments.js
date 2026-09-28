@@ -70,7 +70,62 @@ function checkVisitingDay(visitingDays, scheduledAt) {
     }
   }
 
-  return true
+   return true
+}
+
+function checkVisitingHours(visitingHours, scheduledAt) {
+  if (!visitingHours) return true
+  const timeRanges = parseVisitingHours(visitingHours)
+  if (timeRanges.length === 0) return true
+
+  const d = new Date(scheduledAt)
+  const minutesInDay = d.getHours() * 60 + d.getMinutes()
+
+  return timeRanges.some(({ start, end }) => minutesInDay >= start && minutesInDay <= end)
+}
+
+function parseVisitingHours(visitingHours) {
+  const str = visitingHours.toLowerCase().trim()
+  const slots = []
+
+  const timeRangeRegex = /(\d{1,2})(?::(\d{2}))?\s*(am|pm)?\s*[-–—]\s*(\d{1,2})(?::(\d{2}))?\s*(am|pm)?/gi
+  let match
+  while ((match = timeRangeRegex.exec(str)) !== null) {
+    const [, startHour, startMin, startAmPm, endHour, endMin, endAmPm] = match
+    const start = parseTimeToMinutes(startHour, startMin, startAmPm)
+    const end = parseTimeToMinutes(endHour, endMin, endAmPm)
+    if (start !== null && end !== null && start < end) {
+      slots.push({ start, end })
+    }
+  }
+
+  const simpleRangeRegex = /(\d{1,2})(?::(\d{2}))?\s*[-–—]\s*(\d{1,2})(?::(\d{2}))?/g
+  let simpleMatch
+  while ((simpleMatch = simpleRangeRegex.exec(str)) !== null) {
+    const [, startHour, startMin, endHour, endMin] = simpleMatch
+    const start = parseTimeToMinutes(startHour, startMin, null)
+    const end = parseTimeToMinutes(endHour, endMin, null)
+    if (start !== null && end !== null && start < end) {
+      slots.push({ start, end })
+    }
+  }
+
+  return slots
+}
+
+function parseTimeToMinutes(hour, minute, amPm) {
+  const h = parseInt(hour, 10)
+  const m = minute ? parseInt(minute, 10) : 0
+  if (isNaN(h) || isNaN(m)) return null
+
+  let hour24 = h
+  if (amPm) {
+    const ap = amPm.toLowerCase()
+    if (ap === 'pm' && h !== 12) hour24 = h + 12
+    if (ap === 'am' && h === 12) hour24 = 0
+  }
+  if (hour24 < 0 || hour24 > 23 || m < 0 || m > 59) return null
+  return hour24 * 60 + m
 }
 
 router.post('/', async (request, response) => {
@@ -96,13 +151,18 @@ router.post('/', async (request, response) => {
       return response.status(400).json({ error: `This professional is listed as available on: ${professional.visitingDays}` })
     }
 
-    // Conflict check: ensure no CONFIRMED appointment at the exact same time
+    // Validate scheduled time falls within visiting hours
+    if (!checkVisitingHours(professional.visitingHours, scheduledAt)) {
+      return response.status(400).json({ error: `The selected time is outside of Dr. ${professional.name}'s visiting hours (${professional.visitingHours || 'Regular hours'}). Please choose another slot.` })
+    }
+
+    // Conflict check: ensure no CONFIRMED or REQUESTED appointment at the same time
     const scheduledTime = new Date(scheduledAt)
     const bufferMinutes = 20
     const conflict = await prisma.appointment.findFirst({
       where: {
         professionalId,
-        status: 'CONFIRMED',
+        status: { in: ['CONFIRMED', 'REQUESTED'] },
         scheduledAt: {
           gte: new Date(scheduledTime.getTime() - bufferMinutes * 60 * 1000),
           lte: new Date(scheduledTime.getTime() + bufferMinutes * 60 * 1000),
@@ -110,7 +170,7 @@ router.post('/', async (request, response) => {
       },
     })
     if (conflict) {
-      return response.status(409).json({ error: 'This doctor already has a confirmed session at this time. Please choose another slot.' })
+      return response.status(409).json({ error: 'This doctor already has a confirmed or pending session at this time. Please choose another slot.' })
     }
 
     const appointment = await prisma.appointment.create({
@@ -201,6 +261,35 @@ router.patch('/:id/reschedule', async (request, response) => {
     const isDoctor = appointment.professional?.ownerId === request.user.userId
     const isParent = appointment.parentId === request.user.userId
     if (!isDoctor && !isParent) return response.status(403).json({ error: 'Not authorized' })
+
+    const scheduledDate = new Date(scheduledAt)
+
+    // Validate rescheduled time falls within doctor's visiting days
+    if (appointment.professional?.visitingDays && !checkVisitingDay(appointment.professional.visitingDays, scheduledAt)) {
+      return response.status(400).json({ error: `The new time is outside of Dr. ${appointment.professional.name}'s available days (${appointment.professional.visitingDays}). Please choose a different time.` })
+    }
+
+    // Validate rescheduled time falls within doctor's visiting hours
+    if (!checkVisitingHours(appointment.professional?.visitingHours, scheduledAt)) {
+       return response.status(400).json({ error: `The new time is outside of Dr. ${appointment.professional.name}'s visiting hours. Please choose another time.` })
+    }
+
+    // Conflict check: ensure no CONFIRMED or REQUESTED appointment at the same time (excluding self)
+    const bufferMinutes = 20
+    const conflict = await prisma.appointment.findFirst({
+      where: {
+        professionalId: appointment.professionalId,
+        id: { not: appointment.id },
+        status: { in: ['CONFIRMED', 'REQUESTED'] },
+        scheduledAt: {
+          gte: new Date(scheduledDate.getTime() - bufferMinutes * 60 * 1000),
+          lte: new Date(scheduledDate.getTime() + bufferMinutes * 60 * 1000),
+        },
+      },
+    })
+    if (conflict) {
+      return response.status(409).json({ error: 'This doctor already has a confirmed or requested session near that time. Please choose another slot.' })
+    }
 
     const updated = await prisma.appointment.update({
       where: { id: appointment.id },
