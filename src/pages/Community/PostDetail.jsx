@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams, useNavigate } from 'react-router-dom'
-import { ArrowLeft, Loader2, MessageCircle, Heart, Flag, Trash2, ShieldAlert } from 'lucide-react'
+import { ArrowLeft, Loader2, MessageCircle, Heart, Flag, Trash2, ShieldAlert, ThumbsUp } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext.jsx'
 import {
   getCommunityPost,
   addCommunityComment,
   toggleCommunityReaction,
+  markHelpful,
   deleteCommunityPost,
   reportCommunityContent,
   getSession,
@@ -85,6 +86,18 @@ export default function PostDetail() {
     } catch (err) { setError(err.message) }
   }
 
+  async function handleMarkHelpful() {
+    if (!user) { navigate('/login', { state: { from: `/community/${postId}` } }); return }
+    try {
+      const result = await markHelpful(postId)
+      setPost((prev) => ({
+        ...prev,
+        _count: { ...prev._count, helpfuls: result.count || prev._count.helpfuls + 1 },
+        userHelpful: true,
+      }))
+    } catch (err) { setError(err.message) }
+  }
+
   async function handleDeletePost() {
     if (!window.confirm('Delete this post permanently?')) return
     try {
@@ -155,6 +168,20 @@ export default function PostDetail() {
             </header>
             <h1 className="post-detail__title">{post.title}</h1>
             <div className="post-detail__body" style={{ whiteSpace: 'pre-wrap' }}>{post.body}</div>
+
+            <div className="post-detail__helpful" style={{ marginTop: '24px', marginBottom: '16px' }}>
+              <div className="post-detail__helpful-label">Did you find this post helpful?</div>
+              <button
+                className={`post-detail__helpful-btn ${post.userHelpful ? 'post-detail__helpful-btn--active' : ''}`}
+                onClick={handleMarkHelpful}
+                title={post.userHelpful ? 'You already voted that this was helpful' : 'Mark as helpful'}
+              >
+                <ThumbsUp size={18} />
+              </button>
+              <span className="post-detail__helpful-count">
+                {post._count?.helpfuls || 0} people found this post helpful
+              </span>
+            </div>
 
             <footer className="post-detail__post-footer">
               <button

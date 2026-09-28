@@ -119,6 +119,11 @@ export async function toggleCommunityReaction(postId) {
   return request(`/community/${postId}/reactions`, { method: 'POST', headers: { Authorization: `Bearer ${session?.token || ''}` } })
 }
 
+export async function markHelpful(postId) {
+  const session = getSession()
+  return request(`/community/${postId}/helpful`, { method: 'POST', headers: { Authorization: `Bearer ${session?.token || ''}` } })
+}
+
 export async function deleteCommunityPost(id) {
   const session = getSession()
   return request(`/community/${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${session?.token || ''}` } })
