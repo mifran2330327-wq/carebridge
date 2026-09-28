@@ -1,11 +1,12 @@
 import { MapPin, Users } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import Badge from '../Badge/Badge.jsx'
 import Button from '../Button/Button.jsx'
 import './SchoolCard.css'
 
 // Displays one school/center in the School Directory.
 export default function SchoolCard({ school }) {
-  const { name, type, location, distanceKm, ageRange, facilities = [], verificationStatus } = school
+  const { id, name, type, location, distanceKm, ageRange, facilities = [], verificationStatus } = school
 
   return (
     <article className="school-card">
@@ -28,7 +29,9 @@ export default function SchoolCard({ school }) {
       </div>
       {verificationStatus && <Badge tone={verificationStatus === 'VERIFIED' ? 'brand' : 'neutral'}>{verificationStatus === 'VERIFIED' ? 'Verified' : 'Pending verification'}</Badge>}
 
-      <Button size="sm" variant="outline" className="school-card__btn">View profile</Button>
+      <Link to={`/institutions/${id}`} className="school-card__btn-link">
+        <Button size="sm" variant="outline" className="school-card__btn">View profile</Button>
+      </Link>
     </article>
   )
 }
