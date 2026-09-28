@@ -135,8 +135,10 @@ model Professional {
   chamberAddress  String?
   licenseAuthority String?
   licenseNumber   String?
-  nidNumber       String?
-  verificationNote String?
+   nidNumber       String?
+   isDabMember     Boolean @default(false)
+   dabSerial       String? @unique
+   verificationNote String?
   consultationFee String?
   latitude        Float?
   longitude       Float?

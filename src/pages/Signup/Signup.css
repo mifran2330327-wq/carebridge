@@ -111,6 +111,26 @@
   font: inherit;
 }
 
+.auth-form__radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.auth-form__radio {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.auth-form__radio input[type="radio"] {
+  accent-color: var(--brand);
+}
+
 .auth-form__terms {
   display: flex;
   align-items: flex-start;
