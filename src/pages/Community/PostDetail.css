@@ -96,6 +96,50 @@
   word-wrap: break-word;
 }
 
+.post-detail__helpful {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.post-detail__helpful-label {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.post-detail__helpful-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  padding: 0;
+}
+
+.post-detail__helpful-btn:hover {
+  border-color: var(--brand);
+  color: var(--brand);
+}
+
+.post-detail__helpful-btn--active {
+  background: var(--brand-soft);
+  border-color: var(--brand);
+  color: var(--brand);
+}
+
+.post-detail__helpful-count {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
 .post-detail__post-footer {
   display: flex;
   align-items: center;
