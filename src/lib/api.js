@@ -56,6 +56,16 @@ export function createResource(form) {
 export const getMyResources = () => { const session = getSession(); return request('/resources/mine', { headers: { Authorization: `Bearer ${session?.token || ''}` } }) }
 export const getLookups = (query = '') => request(`/lookups${query ? `?q=${encodeURIComponent(query)}` : ''}`)
 
+export async function getInstitution(id) {
+  const session = getSession()
+  return request(`/reviews/institutions/${id}`, { headers: { Authorization: `Bearer ${session?.token || ''}` } })
+}
+
+export async function submitReview(id, form) {
+  const session = getSession()
+  return request(`/reviews/institutions/${id}/reviews`, { method: 'POST', headers: { Authorization: `Bearer ${session?.token || ''}` }, body: JSON.stringify(form) })
+}
+
 export function getAppointments() {
   const session = getSession()
   return request('/appointments', { headers: { Authorization: `Bearer ${session?.token || ''}` } })

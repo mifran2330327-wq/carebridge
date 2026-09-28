@@ -16,6 +16,7 @@ import Resources from './pages/Resources/Resources.jsx'
 import Community from './pages/Community/Community.jsx'
 import CreatePost from './pages/Community/CreatePost.jsx'
 import PostDetail from './pages/Community/PostDetail.jsx'
+import InstitutionDetail from './pages/InstitutionDetail/InstitutionDetail.jsx'
 import Recommendations from './pages/Recommendations/Recommendations.jsx'
 import NotFound from './pages/NotFound/NotFound.jsx'
 import Admin from './pages/Admin/Admin.jsx'
@@ -37,6 +38,7 @@ export default function App() {
         <Route path="/dashboard" element={<RequireAuth><Dashboard /></RequireAuth>} />
         <Route path="/professionals" element={<RequireAuth><Professionals /></RequireAuth>} />
         <Route path="/schools" element={<RequireAuth><Schools /></RequireAuth>} />
+        <Route path="/institutions/:institutionId" element={<InstitutionDetail />} />
         <Route path="/search" element={<RequireAuth><SmartSearch /></RequireAuth>} />
         <Route path="/resources" element={<RequireAuth><Resources /></RequireAuth>} />
         <Route path="/community" element={<RequireAuth><Community /></RequireAuth>} />
