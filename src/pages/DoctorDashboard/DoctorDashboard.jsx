@@ -54,6 +54,8 @@ export default function DoctorDashboard() {
         licenseNumber: professional.licenseNumber || '',
         nidNumber: professional.nidNumber || '',
         description: professional.description || '',
+        isDabMember: professional.isDabMember || false,
+        dabSerial: professional.dabSerial || '',
       })
     }
   }, [])
@@ -92,7 +94,7 @@ export default function DoctorDashboard() {
       setRescheduleTime('')
       setError('')
     } catch (err) {
-      setError(err.message)
+      setError(err.message || 'Failed to reschedule appointment. The new time may be outside the doctor\'s availability.')
     }
   }
 
@@ -334,25 +336,48 @@ export default function DoctorDashboard() {
                 }
                 required
               />
-              <textarea
-                placeholder="Professional description"
-                rows="3"
-                value={profile.description || ''}
-                onChange={(event) => setProfile({ ...profile, description: event.target.value })}
-              />
-              <Button type="submit" variant="primary">Save profile</Button>
-              {profileMessage && <p role="status">{profileMessage}</p>}
+               <textarea
+                 placeholder="Professional description"
+                 rows="3"
+                 value={profile.description || ''}
+                 onChange={(event) => setProfile({ ...profile, description: event.target.value })}
+               />
+               <label className="doctor-dashboard__dab-group">
+                 <span>DAB membership</span>
+                 <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+                   <label style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                     <input type="radio" name="isDabMember" checked={profile.isDabMember === true} onChange={() => setProfile({ ...profile, isDabMember: true })} />
+                     Yes
+                   </label>
+                   <label style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                     <input type="radio" name="isDabMember" checked={profile.isDabMember === false} onChange={() => setProfile({ ...profile, isDabMember: false, dabSerial: '' })} />
+                     No
+                   </label>
+                 </div>
+               </label>
+               {profile.isDabMember && (
+                 <input
+                   placeholder="DAB serial number (e.g. DAB-123456)"
+                   value={profile.dabSerial || ''}
+                   onChange={(event) => setProfile({ ...profile, dabSerial: event.target.value })}
+                 />
+               )}
+               <Button type="submit" variant="primary">Save profile</Button>
+               {profileMessage && <p role="status">{profileMessage}</p>}
             </form>
           ) : (
-            <div className="doctor-dashboard__profile">
-              <strong>{professional?.professionType || professional?.providerType || 'Professional'}</strong>
-              <p>{professional?.specialty}</p>
-              <p>{professional?.qualification}</p>
-              <p>{professional?.location} {professional?.chamber && ` · ${professional.chamber}`}</p>
-              <p>Visiting: {professional?.visitingDays} · {professional?.visitingHours}</p>
-              <p>Contact: {professional?.phone || 'No phone added'}</p>
-              <span className="doctor-dashboard__status">{professional?.verificationStatus || 'PENDING'}</span>
-            </div>
+               <div className="doctor-dashboard__profile">
+               <strong>{professional?.professionType || professional?.providerType || 'Professional'}</strong>
+               <p>{professional?.specialty}</p>
+               <p>{professional?.qualification}</p>
+               <p>{professional?.location} {professional?.chamber && ` · ${professional.chamber}`}</p>
+               <p>Visiting: {professional?.visitingDays} · {professional?.visitingHours}</p>
+               <p>Contact: {professional?.phone || 'No phone added'}</p>
+               {professional?.isDabMember && (
+                 <p>DAB Member {professional?.dabSerial && `· ${professional.dabSerial}`}</p>
+               )}
+               <span className="doctor-dashboard__status">{professional?.verificationStatus || 'PENDING'}</span>
+             </div>
           )}
         </section>
 

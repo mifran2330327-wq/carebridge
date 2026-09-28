@@ -27,9 +27,13 @@ function formatPostForList(post, currentUserId) {
     _count: {
       comments: post._count?.comments || 0,
       reactions: post._count?.reactions || 0,
+      helpfuls: post._count?.helpfuls || 0,
     },
     userReacted: currentUserId
       ? post.reactions?.some((r) => r.userId === currentUserId) || false
+      : false,
+    userHelpful: currentUserId
+      ? post.helpfuls?.some((h) => h.userId === currentUserId) || false
       : false,
     createdAt: post.createdAt,
     updatedAt: post.updatedAt,
@@ -67,9 +71,13 @@ async function formatPostForDetail(post, currentUserId) {
     _count: {
       comments: post._count?.comments || 0,
       reactions: post._count?.reactions || 0,
+      helpfuls: post._count?.helpfuls || 0,
     },
     userReacted: currentUserId
       ? post.reactions?.some((r) => r.userId === currentUserId) || false
+      : false,
+    userHelpful: currentUserId
+      ? post.helpfuls?.some((h) => h.userId === currentUserId) || false
       : false,
     comments: formattedComments,
     createdAt: post.createdAt,
@@ -161,8 +169,9 @@ router.get('/:id', async (request, response) => {
       include: {
         author: { select: { id: true, name: true } },
         specialty: { select: { id: true, name: true } },
-        _count: { select: { comments: true, reactions: true } },
+        _count: { select: { comments: true, reactions: true, helpfuls: true } },
         reactions: currentUserId ? { where: { userId: currentUserId } } : false,
+        helpfuls: currentUserId ? { where: { userId: currentUserId } } : false,
       },
     })
 
@@ -270,6 +279,29 @@ router.post('/:id/reactions', requireAuth, async (request, response) => {
   } catch (error) {
     console.error('Failed to toggle reaction:', error)
     response.status(500).json({ error: error.message || 'Failed to toggle reaction' })
+  }
+})
+
+// POST /:id/helpful - Mark post as helpful (one vote per user, auth required)
+router.post('/:id/helpful', requireAuth, async (request, response) => {
+  try {
+    const post = await prisma.communityPost.findUnique({ where: { id: request.params.id } })
+    if (!post) return response.status(404).json({ error: 'Post not found' })
+
+    const existing = await prisma.communityHelpful.findUnique({
+      where: { userId_postId: { userId: request.user.userId, postId: post.id } },
+    })
+
+    if (existing) {
+      response.json({ helpful: true })
+    } else {
+      await prisma.communityHelpful.create({ data: { userId: request.user.userId, postId: post.id } })
+      const helpfulCount = await prisma.communityHelpful.count({ where: { postId: post.id } })
+      response.status(201).json({ helpful: true, count: helpfulCount })
+    }
+  } catch (error) {
+    console.error('Failed to mark helpful:', error)
+    response.status(500).json({ error: error.message || 'Failed to mark as helpful' })
   }
 })
 

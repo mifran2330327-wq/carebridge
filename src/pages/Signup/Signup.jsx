@@ -7,7 +7,7 @@ import TagInput from '../../components/TagInput/TagInput.jsx'
 import './Signup.css'
 
 export default function Signup() {
-  const [form, setForm] = useState({ role: 'PARENT', name: '', email: '', password: '', specialties: [], degrees: [], professionType: 'Doctor', location: '', phone: '', description: '', visitingDays: '', visitingHours: '', chamber: '', licenseAuthority: '', licenseNumber: '', nidNumber: '' })
+  const [form, setForm] = useState({ role: 'PARENT', name: '', email: '', password: '', specialties: [], degrees: [], professionType: 'Doctor', location: '', phone: '', description: '', visitingDays: '', visitingHours: '', chamber: '', licenseAuthority: '', licenseNumber: '', nidNumber: '', isDabMember: false, dabSerial: '' })
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [loading, setLoading] = useState(false)
@@ -39,10 +39,14 @@ export default function Signup() {
       setError('Doctors must provide specialty, qualification, location, available days, and available hours.')
       return
     }
+    if (form.role === 'DOCTOR' && form.isDabMember && !form.dabSerial.trim()) {
+      setError('Please provide a DAB serial number for DAB membership.')
+      return
+    }
     setLoading(true)
     register({ name: trimmedName, email: trimmedEmail, password: form.password, role: form.role, professional: form.role === 'DOCTOR' ? {
       specialties: form.specialties, degrees: form.degrees, professionType: form.professionType, location: form.location,
-      phone: form.phone, description: form.description, visitingDays: form.visitingDays, visitingHours: form.visitingHours, chamber: form.chamber, licenseAuthority: form.licenseAuthority, licenseNumber: form.licenseNumber, nidNumber: form.nidNumber,
+       phone: form.phone, description: form.description, visitingDays: form.visitingDays, visitingHours: form.visitingHours, chamber: form.chamber, licenseAuthority: form.licenseAuthority, licenseNumber: form.licenseNumber, nidNumber: form.nidNumber, isDabMember: form.isDabMember, dabSerial: form.isDabMember ? form.dabSerial : null,
     } : undefined })
       .then((data) => {
         saveSession(data)
@@ -105,6 +109,27 @@ export default function Signup() {
               </label>
             ))}
             <label className="auth-form__field"><span>Professional description</span><textarea name="description" placeholder="Services, experience, and areas of care" value={form.description} onChange={handleChange} rows="3" /></label>
+
+            <div className="auth-form__field">
+              <span>DAB membership</span>
+              <div className="auth-form__radio-group">
+                <label className="auth-form__radio">
+                  <input type="radio" name="isDabMember" checked={form.isDabMember === true} onChange={() => setForm((f) => ({ ...f, isDabMember: true }))} />
+                  Yes, I am a member of Doctors Association of Bangladesh (DAB)
+                </label>
+                <label className="auth-form__radio">
+                  <input type="radio" name="isDabMember" checked={form.isDabMember === false} onChange={() => setForm((f) => ({ ...f, isDabMember: false, dabSerial: '' }))} />
+                  No, I am not a DAB member
+                </label>
+              </div>
+            </div>
+
+            {form.isDabMember && (
+              <label className="auth-form__field">
+                <span>DAB serial number *</span>
+                <div className="auth-form__input"><input type="text" name="dabSerial" placeholder="e.g. DAB-123456" value={form.dabSerial} onChange={handleChange} required /></div>
+              </label>
+            )}
           </>}
 
           <label className="auth-form__field">

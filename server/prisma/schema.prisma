@@ -66,8 +66,10 @@ model User {
   blogPosts    BlogPost[]
   communityPosts CommunityPost[]
   comments     Comment[]
-  reactions    Reaction[]
-  reportsMade  Report[]      @relation("ReportReporter")
+   reactions    Reaction[]
+   helpfulVotes CommunityHelpful[]
+   reviews      Review[]
+   reportsMade  Report[]      @relation("ReportReporter")
   notifications Notification[]
   resourcesCreated Resource[] @relation("ResourceCreatedBy")
   createdAt    DateTime      @default(now())
@@ -133,8 +135,10 @@ model Professional {
   chamberAddress  String?
   licenseAuthority String?
   licenseNumber   String?
-  nidNumber       String?
-  verificationNote String?
+   nidNumber       String?
+   isDabMember     Boolean @default(false)
+   dabSerial       String? @unique
+   verificationNote String?
   consultationFee String?
   latitude        Float?
   longitude       Float?
@@ -229,6 +233,7 @@ model Institution {
   longitude          Float?
   verificationStatus VerificationStatus @default(PENDING)
   professionals      Professional[]
+  reviews            Review[]
   createdAt          DateTime           @default(now())
   updatedAt          DateTime           @updatedAt
 
@@ -263,6 +268,7 @@ model CommunityPost {
   specialty Specialty?            @relation(fields: [specialtyId], references: [id], onDelete: SetNull)
   comments  Comment[]
   reactions Reaction[]
+  helpfuls  CommunityHelpful[]
   reports   Report[]
   createdAt DateTime              @default(now())
   updatedAt DateTime              @updatedAt
@@ -290,6 +296,33 @@ model Comment {
 }
 
 model Reaction {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  postId    String
+  post      CommunityPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, postId])
+  @@index([postId])
+}
+
+model Review {
+  id            String   @id @default(uuid())
+  rating        Int      @default(5)
+  comment       String?
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  institutionId String
+  institution   Institution @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@unique([userId, institutionId])
+  @@index([institutionId])
+}
+
+model CommunityHelpful {
   id        String   @id @default(uuid())
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
