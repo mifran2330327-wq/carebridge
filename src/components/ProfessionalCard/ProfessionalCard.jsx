@@ -21,6 +21,8 @@ export default function ProfessionalCard({ professional }) {
     chamber,
     phone,
     ownerId,
+    isDabMember,
+    dabSerial,
     onBook,
   } = professional
 
@@ -48,6 +50,11 @@ export default function ProfessionalCard({ professional }) {
       </div>
       {degrees.length > 0 && <div className="pro-card__credentials">Degrees: {degrees.join(', ')}</div>}
       <div className="pro-card__badges">
+        {isDabMember && (
+          <Badge tone="brand">
+            DAB Member{dabSerial && ` · ${dabSerial}`}
+          </Badge>
+        )}
         {verificationStatus && (
           <Badge tone={verified ? 'brand' : 'neutral'}>
             {verified ? 'Verified Professional' : 'Pending Verification'}

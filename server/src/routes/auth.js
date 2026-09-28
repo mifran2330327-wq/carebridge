@@ -23,11 +23,20 @@ router.post('/register', async (request, response) => {
   if (role === 'DOCTOR' && (!professional?.specialties?.length || !professional?.degrees?.length || !professional?.location || !professional?.visitingDays || !professional?.visitingHours || !professional?.nidNumber)) {
     return response.status(400).json({ error: 'Doctors must provide specialty, qualification, location, available days, and available hours' })
   }
+  if (role === 'DOCTOR' && professional?.isDabMember && !professional?.dabSerial?.trim()) {
+    return response.status(400).json({ error: 'DAB serial number is required for DAB members' })
+  }
 
   try {
     const normalizedEmail = email.trim().toLowerCase()
     const existingUser = await prisma.user.findUnique({ where: { email: normalizedEmail } })
     if (existingUser) return response.status(409).json({ error: 'An account with this email already exists' })
+
+    // Validate DAB serial uniqueness if provided
+    if (professional?.isDabMember && professional?.dabSerial?.trim()) {
+      const existingDab = await prisma.professional.findUnique({ where: { dabSerial: professional.dabSerial.trim() } })
+      if (existingDab) return response.status(409).json({ error: 'This DAB serial number is already registered' })
+    }
 
     const passwordHash = await bcrypt.hash(password, 12)
     const user = await prisma.user.create({
@@ -41,6 +50,8 @@ router.post('/register', async (request, response) => {
           chamberAddress: professional.chamberAddress?.trim() || professional.chamber?.trim() || undefined,
           licenseAuthority: professional.licenseAuthority?.trim() || undefined, licenseNumber: professional.licenseNumber?.trim() || undefined,
           nidNumber: professional.nidNumber?.trim() || undefined,
+          isDabMember: Boolean(professional.isDabMember) || false,
+          dabSerial: professional.isDabMember ? professional.dabSerial?.trim() || undefined : null,
           degrees: { create: (professional.degrees || []).map((name) => ({ degree: { connectOrCreate: { where: { name: name.trim() }, create: { name: name.trim(), isCustom: true } } } })) },
           specialties: { create: (professional.specialties || []).map((name) => ({ specialty: { connectOrCreate: { where: { name: name.trim() }, create: { name: name.trim(), isCustom: true } } } })) },
           email: normalizedEmail, verificationStatus: 'PENDING',
@@ -73,7 +84,7 @@ router.post('/login', async (request, response) => {
 
 router.patch('/professional', requireAuth, async (request, response) => {
   if (request.user.role !== 'DOCTOR') return response.status(403).json({ error: 'Professional access required' })
-  const { name, professionType, specialties = [], degrees = [], location, chamber, phone, visitingDays, visitingHours, licenseAuthority, licenseNumber, nidNumber, description } = request.body || {}
+  const { name, professionType, specialties = [], degrees = [], location, chamber, phone, visitingDays, visitingHours, licenseAuthority, licenseNumber, nidNumber, description, isDabMember, dabSerial } = request.body || {}
   if (!name?.trim() || !professionType?.trim() || !specialties.length || !degrees.length || !location?.trim() || !visitingDays?.trim() || !visitingHours?.trim() || !nidNumber?.trim()) {
     return response.status(400).json({ error: 'Name, profession, degrees, specialties, location, schedule, and NID are required' })
   }
@@ -81,6 +92,12 @@ router.patch('/professional', requireAuth, async (request, response) => {
   try {
     const professional = await prisma.professional.findUnique({ where: { ownerId: request.user.userId } })
     if (!professional) return response.status(404).json({ error: 'Professional profile not found' })
+
+    if (isDabMember && dabSerial?.trim()) {
+      const existingDab = await prisma.professional.findUnique({ where: { dabSerial: dabSerial.trim() } })
+      if (existingDab && existingDab.id !== professional.id) return response.status(409).json({ error: 'This DAB serial number is already registered' })
+    }
+
     const verificationChanged = professional.professionType !== professionType.trim() || professional.licenseNumber !== (licenseNumber?.trim() || null) || professional.nidNumber !== nidNumber.trim()
     const updated = await prisma.$transaction(async (transaction) => {
       await transaction.user.update({
@@ -94,6 +111,8 @@ router.patch('/professional', requireAuth, async (request, response) => {
         location: location.trim(), chamber: chamber?.trim() || null, chamberAddress: chamber?.trim() || null, phone: phone?.trim() || null,
         visitingDays: visitingDays.trim(), visitingHours: visitingHours.trim(), licenseAuthority: licenseAuthority?.trim() || null,
         licenseNumber: licenseNumber?.trim() || null, nidNumber: nidNumber.trim(), description: description?.trim() || null,
+        isDabMember: Boolean(isDabMember) || false,
+        dabSerial: isDabMember ? (dabSerial?.trim() || null) : null,
         verificationStatus: verificationChanged ? 'PENDING' : undefined,
         degrees: { create: degrees.map((degree) => ({ degree: { connectOrCreate: { where: { name: degree.trim() }, create: { name: degree.trim(), isCustom: true } } } })) },
         specialties: { create: specialties.map((specialty) => ({ specialty: { connectOrCreate: { where: { name: specialty.trim() }, create: { name: specialty.trim(), isCustom: true } } } })) },
