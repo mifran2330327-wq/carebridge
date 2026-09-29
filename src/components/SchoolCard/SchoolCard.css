@@ -56,3 +56,41 @@
   align-self: flex-start;
   margin-top: 4px;
 }
+
+.school-card__bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.school-card__rating {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.school-card__stars {
+  display: flex;
+  gap: 1px;
+}
+
+.school-card__star--filled {
+  color: #eab32c;
+  fill: #eab32c;
+}
+
+.school-card__star--empty {
+  color: var(--text-muted);
+  fill: none;
+}
+
+.school-card__rating-text {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.school-card__no-reviews {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
