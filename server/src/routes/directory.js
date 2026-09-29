@@ -9,7 +9,23 @@ router.get('/', async (_request, response) => {
     prisma.institution.findMany({ orderBy: { name: 'asc' } }),
     prisma.professional.findMany({ include: { institution: true, degrees: { include: { degree: true } }, specialties: { include: { specialty: true } } }, orderBy: { name: 'asc' } }),
   ])
-  response.json({ institutions, professionals })
+
+  // Get review aggregates for all institutions in a single query
+  const reviewStats = await prisma.review.groupBy({
+    by: ['institutionId'],
+    where: { institutionId: { in: institutions.map((i) => i.id) } },
+    _avg: { rating: true },
+    _count: { _all: true },
+  })
+
+  const statsMap = new Map(reviewStats.map((s) => [s.institutionId, { averageRating: s._avg.rating || 0, reviewCount: s._count._all }]))
+
+  const institutionsWithRating = institutions.map((inst) => {
+    const stats = statsMap.get(inst.id) || { averageRating: 0, reviewCount: 0 }
+    return { ...inst, averageRating: stats.averageRating, reviewCount: stats.reviewCount }
+  })
+
+  response.json({ institutions: institutionsWithRating, professionals })
 })
 
 router.get('/blog', async (request, response) => {

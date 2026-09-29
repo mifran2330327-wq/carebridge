@@ -186,7 +186,8 @@
 }
 
 .forum-card__replies,
-.forum-card__reactions {
+.forum-card__reactions,
+.forum-card__helpful {
   display: flex;
   align-items: center;
   gap: 5px;

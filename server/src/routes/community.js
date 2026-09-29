@@ -109,8 +109,8 @@ router.get('/', async (request, response) => {
         include: {
           author: { select: { id: true, name: true } },
           specialty: { select: { id: true, name: true } },
-          _count: { select: { comments: true, reactions: true } },
-          reactions: currentUserId ? { where: { userId: currentUserId } } : false,
+        _count: { select: { comments: true, reactions: true, helpfuls: true } },
+        reactions: currentUserId ? { where: { userId: currentUserId } } : false,
         },
         orderBy: { createdAt: 'desc' },
         take,
