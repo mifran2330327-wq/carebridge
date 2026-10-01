@@ -68,34 +68,53 @@ export default function Dashboard() {
           const loadedChildren = children || []
           setProfileChildren(loadedChildren)
 
-          const formattedAppts = (appts || []).map((a) => {
-            const date = new Date(a.scheduledAt)
+         const formattedAppts = (appts || [])
+  .filter((a) => {
+    const date = new Date(a.scheduledAt)
 
-            return {
-              id: a.id,
-              professional: a.professional?.name || 'Doctor',
-              role: a.professional?.specialty || 'Specialist',
-              child:
-                a.notes?.split(' - ')[0] ||
-                loadedChildren[0]?.name ||
-                'Child',
-              mode: a.professional?.chamber
-                ? `Visit: ${a.professional.chamber}`
-                : 'In-person / Chamber',
-              date: date.toLocaleDateString('en-US', {
-                month: 'short',
-                day: 'numeric',
-                year: 'numeric',
-              }),
-              time: date.toLocaleTimeString('en-US', {
-                hour: 'numeric',
-                minute: '2-digit',
-              }),
-              status: a.status,
-            }
-          })
+    const isFuture = date >= new Date()
 
-          setAppointments(formattedAppts)
+    const status = String(a.status || '').toUpperCase()
+
+    const isActive =
+      status !== 'CANCELLED' &&
+      status !== 'COMPLETED'
+
+    return isFuture && isActive
+  })
+  .sort(
+    (a, b) =>
+      new Date(a.scheduledAt) -
+      new Date(b.scheduledAt)
+  )
+  .map((a) => {
+    const date = new Date(a.scheduledAt)
+
+    return {
+      id: a.id,
+      professional: a.professional?.name || 'Doctor',
+      role: a.professional?.specialty || 'Specialist',
+      child:
+        a.notes?.split(' - ')[0] ||
+        loadedChildren[0]?.name ||
+        'Child',
+      mode: a.professional?.chamber
+        ? `Visit: ${a.professional.chamber}`
+        : 'In-person / Chamber',
+      date: date.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+      }),
+      time: date.toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: '2-digit',
+      }),
+      status: a.status,
+    }
+  })
+
+setAppointments(formattedAppts)
 
           const recs = []
 
@@ -638,12 +657,12 @@ export default function Dashboard() {
               </div>
 
               <Link
-                to="/recommendations"
-                className="dashboard__see-all"
-              >
-                View all
-                <ArrowRight size={14} />
-              </Link>
+  to="/professionals"
+  className="dashboard__see-all"
+>
+  Explore specialists
+  <ArrowRight size={14} />
+</Link>
             </div>
 
             <div className="dashboard__recs">
