@@ -129,8 +129,11 @@ router.get('/', async (request, response) => {
   }
 })
 
-// POST / - Create a post (auth required)
+// POST / - Create a post (only PARENT role)
 router.post('/', requireAuth, async (request, response) => {
+  if (request.user.role !== 'PARENT') {
+    return response.status(403).json({ error: 'Only community members can create discussion posts' })
+  }
   const { title, body, isAnonymous = false, specialtyId } = request.body || {}
   if (!title?.trim() || !body?.trim()) {
     return response.status(400).json({ error: 'Title and body are required' })
@@ -188,8 +191,11 @@ router.get('/:id', async (request, response) => {
   }
 })
 
-// POST /:id/comments - Add comment (auth required)
+// POST /:id/comments - Add comment (PARENT or DOCTOR only, not ADMIN)
 router.post('/:id/comments', requireAuth, async (request, response) => {
+  if (!['PARENT', 'DOCTOR'].includes(request.user.role)) {
+    return response.status(403).json({ error: 'You are not allowed to comment on posts' })
+  }
   const { body, isAnonymous = false } = request.body || {}
   if (!body?.trim()) return response.status(400).json({ error: 'Comment body is required' })
 

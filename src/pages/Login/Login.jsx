@@ -21,7 +21,7 @@ export default function Login() {
     setError('')
     setSuccess('')
     const trimmedEmail = form.email.trim()
-    if (!/^\S+@\S+\.\S+$/.test(trimmedEmail)) {
+  if (!/^\S+@\S+\.\S+$/.test(trimmedEmail)) {
       setError('Please enter a valid email address, for example name@gmail.com.')
       return
     }

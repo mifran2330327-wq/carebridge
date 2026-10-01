@@ -33,14 +33,51 @@ router.get('/blog', async (request, response) => {
   const [posts, total] = await Promise.all([
     prisma.blogPost.findMany({
       where: { status: 'PUBLISHED' },
-      include: { author: { select: { name: true } } },
-      orderBy: { createdAt: 'desc' },
+      include: {
+        author: { select: { id: true, name: true } },
+        professional: {
+          include: {
+            degrees: { include: { degree: true } },
+            specialties: { include: { specialty: true } },
+          },
+        },
+      },
+      orderBy: { publishedAt: 'desc' },
       take,
       skip,
     }),
     prisma.blogPost.count({ where: { status: 'PUBLISHED' } }),
   ])
-  response.json({ posts, pagination: { total, take, skip } })
+  response.json({
+    posts: posts.map((p) => ({
+      id: p.id,
+      title: p.title,
+      excerpt: p.excerpt,
+      content: p.content,
+      category: p.category,
+      coverImage: p.coverImage,
+      references: p.references,
+      status: p.status,
+      publishedAt: p.publishedAt,
+      createdAt: p.createdAt,
+      updatedAt: p.updatedAt,
+      author: p.author ? { id: p.author.id, name: p.author.name } : null,
+      professional: p.professional
+        ? {
+            id: p.professional.id,
+            name: p.professional.name,
+            specialty: p.professional.specialty,
+            qualification: p.professional.qualification,
+            isDabMember: p.professional.isDabMember,
+            dabSerial: p.professional.dabSerial,
+            verificationStatus: p.professional.verificationStatus,
+            degrees: p.professional.degrees?.map((d) => d.degree?.name).filter(Boolean) || [],
+            specialties: p.professional.specialties?.map((s) => s.specialty?.name).filter(Boolean) || [],
+          }
+        : null,
+    })),
+    pagination: { total, take, skip },
+  })
 })
 
 function parsePagination(query) {

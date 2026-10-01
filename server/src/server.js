@@ -17,6 +17,7 @@ import resourcesRouter from './routes/resources.js'
 import communityRouter from './routes/community.js'
 import notificationsRouter from './routes/notifications.js'
 import reviewsRouter from './routes/reviews.js'
+import blogRouter from './routes/blog.js'
 
 const app = express()
 const port = Number(process.env.PORT ?? 5000)
@@ -45,6 +46,7 @@ app.use('/api/resources', resourcesRouter)
 app.use('/api/community', communityRouter)
 app.use('/api/notifications', notificationsRouter)
 app.use('/api/reviews', reviewsRouter)
+app.use('/api/blog', blogRouter)
 
 app.get('/api/lookups', async (request, response) => {
   const query = String(request.query.q || '').trim()

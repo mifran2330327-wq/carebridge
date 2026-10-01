@@ -255,3 +255,33 @@
     min-height: 3.5rem;
   }
 }
+/* Footer - clear space below top border */
+
+.footer {
+  padding-top: 3rem;
+}
+
+.footer__inner {
+  padding-top: 4rem !important;
+  padding-bottom: 3.5rem !important;
+}
+
+@media (max-width: 760px) {
+  .footer {
+    padding-top: 2rem;
+  }
+
+  .footer__inner {
+    padding-top: 3rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer {
+    padding-top: 1.5rem;
+  }
+
+  .footer__inner {
+    padding-top: 2.5rem !important;
+  }
+}

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import {
   addCertificate,
   createResource,
@@ -10,6 +10,9 @@ import {
   saveSession,
   updateAppointmentStatus,
   updateProfessional,
+  getMyBlogPosts,
+  deleteBlogPost,
+  publishBlogPost,
 } from '../../lib/api.js'
 import { useAuth } from '../../context/AuthContext.jsx'
 import Button from '../../components/Button/Button.jsx'
@@ -28,7 +31,9 @@ export default function DoctorDashboard() {
   const [profile, setProfile] = useState({})
   const [certificate, setCertificate] = useState({ label: '', fileUrl: '' })
   const [certificateMessage, setCertificateMessage] = useState('')
-  const [myResources, setMyResources] = useState([])
+const [myResources, setMyResources] = useState([])
+  const [myBlogPosts, setMyBlogPosts] = useState([])
+  const [blogLoading, setBlogLoading] = useState(false)
   const [rescheduleId, setRescheduleId] = useState(null)
   const [rescheduleTime, setRescheduleTime] = useState('')
 
@@ -38,6 +43,9 @@ export default function DoctorDashboard() {
       .catch((loadError) => setError(loadError.message))
     getMyResources()
       .then(({ resources }) => setMyResources(resources || []))
+      .catch(() => {})
+    getMyBlogPosts()
+      .then(({ posts }) => setMyBlogPosts(posts || []))
       .catch(() => {})
     if (professional) {
       setProfile({
@@ -297,6 +305,61 @@ export default function DoctorDashboard() {
               </div>
             ))}
           </div>
+        </section>
+
+        {/* ---------------- MY BLOG POSTS ---------------- */}
+        <section className="doctor-dashboard__section">
+          <div className="doctor-dashboard__section-head">
+            <h2>My Blog Posts</h2>
+            <Link to="/blog/new">
+              <Button variant="primary" size="sm">Write Blog Post</Button>
+            </Link>
+          </div>
+          {myBlogPosts.length > 0 ? (
+            <div className="doctor-dashboard__blog-list">
+              {myBlogPosts.map((blog) => (
+                <div key={blog.id} className="doctor-dashboard__blog-item">
+                  <div>
+                    <strong>{blog.title}</strong>
+                    <span className={`doctor-dashboard__blog-status doctor-dashboard__blog-status--${blog.status.toLowerCase()}`}>
+                      {blog.status}
+                    </span>
+                  </div>
+                  <div className="doctor-dashboard__blog-actions">
+                    {blog.status === 'DRAFT' && (
+                      <Button size="sm" variant="outline" onClick={async () => {
+                        try {
+                          await publishBlogPost(blog.id, 'publish')
+                          setMyBlogPosts((current) => current.map((b) => b.id === blog.id ? { ...b, status: 'PUBLISHED', publishedAt: new Date() } : b))
+                        } catch (err) {
+                          console.error(err)
+                        }
+                      }}>
+                        Publish
+                      </Button>
+                    )}
+                    <Link to={`/blog/${blog.id}/edit`}>
+                      <Button size="sm" variant="ghost">Edit</Button>
+                    </Link>
+                    <Button size="sm" variant="ghost" onClick={async () => {
+                      if (window.confirm('Delete this blog post?')) {
+                        try {
+                          await deleteBlogPost(blog.id)
+                          setMyBlogPosts((current) => current.filter((b) => b.id !== blog.id))
+                        } catch (err) {
+                          console.error(err)
+                        }
+                      }
+                    }}>
+                      Delete
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p>No blog posts yet. Click "Write Blog Post" to create your first article.</p>
+          )}
         </section>
 
         {/* ---------------- PROFILE ---------------- */}

@@ -140,12 +140,25 @@ export default function Professionals() {
   return (
     <div className="page directory">
       <div className="container">
-        <div className="directory__header">
-          <div>
-            <h1>Therapist &amp; Professional Directory</h1>
-            <p>Browse verified specialists and doctors from the CareBridge database.</p>
-          </div>
-        </div>
+        <div className="directory__hero">
+  <div className="directory__hero-content">
+    <span className="directory__eyebrow">CAREBRIDGE DIRECTORY</span>
+
+    <h1>Find the right professional for your child</h1>
+
+    <p>
+      Browse specialists and doctors from the CareBridge network,
+      then search by name, specialty, or location.
+    </p>
+  </div>
+
+  {!loading && (
+    <div className="directory__hero-stat">
+      <strong>{professionals.length}</strong>
+      <span>Professionals</span>
+    </div>
+  )}
+</div>
 
         <SearchBar value={query} onChange={setQuery} location={location} onLocationChange={setLocation} placeholder="Search by name or specialty..." />
 

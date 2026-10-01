@@ -46,7 +46,8 @@ const [sortBy, setSortBy] = useState('relevance')
 
   const source = tab === 'professionals' ? directory.professionals : directory.schools
 
-  const filteredResults = source.filter((item) => {
+const filteredResults = source
+  .filter((item) => {
     const haystack = [
       item.name,
       item.role,
@@ -61,10 +62,46 @@ const [sortBy, setSortBy] = useState('relevance')
       .join(' ')
       .toLowerCase()
 
-    const matchesQuery = !query || haystack.includes(query.trim().toLowerCase())
-    const matchesLocation = !location || (item.location && item.location.toLowerCase().includes(location.trim().toLowerCase()))
+    const matchesQuery =
+      !query ||
+      haystack.includes(query.trim().toLowerCase())
 
-    return matchesQuery && matchesLocation
+    const matchesLocation =
+      !location ||
+      (
+        item.location &&
+        item.location
+          .toLowerCase()
+          .includes(location.trim().toLowerCase())
+      )
+
+    const matchesSpecialty =
+      tab !== 'professionals' ||
+      !specialtyFilter ||
+      item.specialties?.some(
+        (specialty) =>
+          specialty.toLowerCase() === specialtyFilter.toLowerCase()
+      )
+
+    const matchesVerified =
+      tab !== 'professionals' ||
+      !verifiedOnly ||
+      item.verified === true ||
+      item.verificationStatus === 'VERIFIED'
+
+    return (
+      matchesQuery &&
+      matchesLocation &&
+      matchesSpecialty &&
+      matchesVerified
+    )
+  })
+  .sort((a, b) => {
+    if (sortBy === 'name') {
+      return (a.name || '').localeCompare(b.name || '')
+    }
+
+    return 0
   })
 
   return (
@@ -102,35 +139,36 @@ const [sortBy, setSortBy] = useState('relevance')
   <div className="filter-box">
     <h2>Search Filters</h2>
 
-    <div className="filter-field">
-      <label htmlFor="specialty-filter">Specialty</label>
+{tab === 'professionals' && (
+  <div className="filter-field">
+    <label htmlFor="specialty-filter">Specialty</label>
 
-      <select
-        id="specialty-filter"
-        value={specialtyFilter}
-        onChange={(e) => setSpecialtyFilter(e.target.value)}
-      >
-        <option value="">All specialties</option>
-        <option value="Autism">Autism</option>
-        <option value="Neurology">Neurology</option>
-        <option value="Speech Therapy">Speech Therapy</option>
-        <option value="Occupational Therapy">
-          Occupational Therapy
-        </option>
-      </select>
-    </div>
+    <select
+      id="specialty-filter"
+      value={specialtyFilter}
+      onChange={(e) => setSpecialtyFilter(e.target.value)}
+    >
+      <option value="">All specialties</option>
+      <option value="Autism">Autism</option>
+      <option value="Neurology">Neurology</option>
+      <option value="Speech Therapy">Speech Therapy</option>
+      <option value="Occupational Therapy">Occupational Therapy</option>
+    </select>
+  </div>
+)}
 
-    <div className="filter-field">
-      <label>
-        <input
-          type="checkbox"
-          checked={verifiedOnly}
-          onChange={(e) => setVerifiedOnly(e.target.checked)}
-        />
-
-        {' '}Verified professionals only
-      </label>
-    </div>
+{tab === 'professionals' && (
+  <div className="filter-field">
+    <label>
+      <input
+        type="checkbox"
+        checked={verifiedOnly}
+        onChange={(e) => setVerifiedOnly(e.target.checked)}
+      />
+      {' '}Verified professionals only
+    </label>
+  </div>
+)}
 
     <div className="filter-field">
       <label htmlFor="sort-filter">Sort by</label>

@@ -30,6 +30,18 @@ export default function CreatePost() {
     )
   }
 
+  if (user.role !== 'PARENT') {
+    return (
+      <div className="page create-post">
+        <div className="container create-post__card">
+          <h1>Community posts are for parents</h1>
+          <p>Only community members (parent accounts) can start new discussions. If you are a healthcare professional, you can participate by commenting on existing posts below.</p>
+          <Link to="/community"><Button variant="primary">Back to community</Button></Link>
+        </div>
+      </div>
+    )
+  }
+
   function handleChange(e) {
     setForm((f) => ({ ...f, [e.target.name]: e.target.value }))
   }
