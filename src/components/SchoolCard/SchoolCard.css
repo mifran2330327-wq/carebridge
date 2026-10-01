@@ -1,50 +1,99 @@
+/* =========================================================
+   SCHOOL CARD
+   ========================================================= */
+
 .school-card {
-  background: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
-  padding: 20px;
+  position: relative;
+  min-height: 100%;
+  padding: 22px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  transition: box-shadow var(--transition-fast), transform var(--transition-fast);
+  gap: 16px;
+
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 18px;
+
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    border-color 180ms ease;
 }
 
 .school-card:hover {
-  box-shadow: var(--shadow-md);
-  transform: translateY(-2px);
+  transform: translateY(-4px);
+  border-color: rgba(20, 184, 166, 0.35);
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.09);
 }
+
+/* =========================================================
+   HEADER
+   ========================================================= */
 
 .school-card__header {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 10px;
+  gap: 12px;
 }
 
 .school-card__name {
   margin: 0;
-  font-size: 1rem;
+  color: var(--text-primary);
+  font-size: 1.05rem;
+  line-height: 1.4;
+  font-weight: 700;
 }
 
 .school-card__type {
-  margin: 3px 0 0;
-  font-size: 0.82rem;
-  color: var(--text-muted);
+  display: inline-flex;
+  width: fit-content;
+  margin: 5px 0 0;
+  padding: 4px 9px;
+  border-radius: 999px;
+
+  background: var(--brand-soft);
+  color: var(--brand);
+
+  font-size: 0.74rem;
+  font-weight: 600;
+  line-height: 1.2;
 }
+
+/* =========================================================
+   META
+   ========================================================= */
 
 .school-card__meta {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  font-size: 0.85rem;
+  gap: 9px;
+
+  padding: 12px 13px;
+  border-radius: 11px;
+  background: var(--bg-surface-alt);
+
   color: var(--text-secondary);
+  font-size: 0.8rem;
+  line-height: 1.45;
 }
 
 .school-card__meta span {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
 }
+
+.school-card__meta svg {
+  flex-shrink: 0;
+  color: var(--brand);
+}
+
+/* =========================================================
+   FACILITIES
+   ========================================================= */
 
 .school-card__facilities {
   display: flex;
@@ -52,7 +101,47 @@
   gap: 6px;
 }
 
-.school-card__btn {
+/* =========================================================
+   VERIFICATION
+   ========================================================= */
+
+.school-card > .badge {
   align-self: flex-start;
-  margin-top: 4px;
+}
+
+/* =========================================================
+   ACTION
+   ========================================================= */
+
+.school-card__btn-link {
+  margin-top: auto;
+  padding-top: 15px;
+
+  border-top: 1px solid var(--border-subtle);
+
+  text-decoration: none;
+}
+
+.school-card__btn {
+  margin: 0;
+}
+
+.school-card__btn-link .btn {
+  width: 100%;
+  justify-content: center;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 600px) {
+  .school-card {
+    padding: 18px;
+    border-radius: 15px;
+  }
+
+  .school-card__name {
+    font-size: 1rem;
+  }
 }
