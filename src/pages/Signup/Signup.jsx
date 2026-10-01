@@ -27,7 +27,7 @@ export default function Signup() {
       setError('Please enter your name.')
       return
     }
-    if (!/^\S+@\S+\.\S+$/.test(trimmedEmail)) {
+if (!/^\S+@\S+\.\S+$/.test(trimmedEmail)) {
       setError('Please enter a valid email address, for example name@gmail.com.')
       return
     }

@@ -62,7 +62,7 @@ router.post('/register', async (request, response) => {
     response.status(201).json({ token: createToken(user), user: publicUser(user) })
   } catch (error) {
     console.error('Registration failed:', error)
-    response.status(500).json({ error: 'Unable to create account' })
+    response.status(500).json({ error: error.message || 'Unable to create account' })
   }
 })
 

@@ -1,111 +1,215 @@
+
+/* ========================================
+   CareBridge - Login Page
+======================================== */
+
 .auth-page {
+  position: relative;
+  isolation: isolate;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 60px 20px 80px;
-  min-height: 90vh;
-  background: var(--bg-app);
+  min-height: calc(100vh - 4.5rem);
+  padding: 4rem 1.25rem;
+  overflow: hidden;
+  background:
+    radial-gradient(
+      circle at 10% 15%,
+      var(--brand-soft),
+      transparent 32%
+    ),
+    radial-gradient(
+      circle at 90% 85%,
+      var(--teal-50),
+      transparent 30%
+    ),
+    var(--bg-app);
+}
+
+.auth-page::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  top: -100px;
+  right: -80px;
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  background: var(--brand-soft);
+  opacity: 0.45;
+  filter: blur(45px);
+  pointer-events: none;
 }
 
 .auth-card {
+  position: relative;
   width: 100%;
-  max-width: 420px;
+  max-width: 440px;
+  padding: 2.5rem 2.25rem;
   background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md);
-  padding: 36px 32px;
+  border-radius: 1.25rem;
+  box-shadow: var(--shadow-lg);
 }
 
 .auth-card__brand {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 8px;
-  font-weight: 700;
+  gap: 0.7rem;
+  margin-bottom: 2rem;
   color: var(--brand);
-  margin-bottom: 26px;
+  font-size: 1.08rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  text-decoration: none;
+}
+
+.auth-card__brand svg {
+  flex-shrink: 0;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0.4rem;
+  border-radius: 0.65rem;
+  background: var(--brand-soft);
 }
 
 .auth-card__title {
-  font-size: 1.5rem;
-  margin-bottom: 6px;
+  margin: 0 0 0.5rem;
+  color: var(--text-primary);
+  font-size: clamp(1.65rem, 4vw, 1.9rem);
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 1.25;
 }
 
 .auth-card__subtitle {
+  margin: 0 0 1.75rem;
   color: var(--text-secondary);
-  font-size: 0.9rem;
-  margin-bottom: 26px;
+  font-size: 0.92rem;
+  line-height: 1.7;
 }
 
 .auth-form {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 1.15rem;
 }
 
 .auth-form__field {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: var(--text-secondary);
+  gap: 0.5rem;
+  color: var(--text-primary);
+  font-size: 0.88rem;
+  font-weight: 600;
 }
 
 .auth-form__input {
   display: flex;
   align-items: center;
-  gap: 10px;
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-sm);
-  padding: 11px 14px;
-  background: var(--bg-app);
+  gap: 0.7rem;
+  min-height: 3.15rem;
+  padding: 0.75rem 0.9rem;
   color: var(--text-muted);
+  background: var(--bg-app);
+  border: 1px solid var(--border-subtle);
+  border-radius: 0.75rem;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease;
 }
 
 .auth-form__input:focus-within {
   border-color: var(--brand);
+  background: var(--bg-surface);
+  box-shadow: 0 0 0 3px var(--brand-soft);
+}
+
+.auth-form__input > svg {
+  flex-shrink: 0;
+  color: var(--text-muted);
+}
+
+.auth-form__input:focus-within > svg {
+  color: var(--brand);
 }
 
 .auth-form__input input {
+  width: 100%;
+  min-width: 0;
+  padding: 0;
+  color: var(--text-primary);
+  background: transparent;
   border: none;
   outline: none;
-  background: none;
-  width: 100%;
-  color: var(--text-primary);
-  font-size: 0.92rem;
+  font: inherit;
+  font-size: 0.93rem;
+}
+
+.auth-form__input input::placeholder {
+  color: var(--text-muted);
+  opacity: 0.7;
 }
 
 .auth-form__row {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.1rem;
   font-size: 0.82rem;
 }
 
 .auth-form__checkbox {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 0.5rem;
   color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.auth-form__checkbox input {
+  width: 1rem;
+  height: 1rem;
+  margin: 0;
+  accent-color: var(--brand);
+  cursor: pointer;
 }
 
 .auth-form__link {
   color: var(--brand);
-  font-weight: 500;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.auth-form__link:hover {
+  text-decoration: underline;
 }
 
 .auth-form__submit {
   width: 100%;
-  margin-top: 6px;
+  min-height: 3.1rem;
+  margin-top: 0.35rem;
+  border-radius: 0.75rem;
+  font-weight: 600;
+}
+
+.auth-form__submit:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
 }
 
 .auth-form__message {
-  margin: -4px 0 0;
-  padding: 10px 12px;
-  border-radius: var(--radius-sm);
-  font-size: 0.82rem;
-  line-height: 1.4;
+  margin: 0;
+  padding: 0.8rem 0.9rem;
+  border-radius: 0.7rem;
+  font-size: 0.85rem;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
 }
 
 .auth-form__message--error {
@@ -121,13 +225,61 @@
 }
 
 .auth-card__footer {
-  text-align: center;
-  margin: 22px 0 0;
-  font-size: 0.88rem;
+  margin: 1.75rem 0 0;
+  padding-top: 1.35rem;
+  border-top: 1px solid var(--border-subtle);
   color: var(--text-secondary);
+  font-size: 0.88rem;
+  line-height: 1.6;
+  text-align: center;
 }
 
 .auth-card__footer a {
   color: var(--brand);
-  font-weight: 600;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.auth-card__footer a:hover {
+  text-decoration: underline;
+}
+
+.auth-card__brand:focus-visible,
+.auth-card__footer a:focus-visible,
+.auth-form__link:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 4px;
+  border-radius: 3px;
+}
+
+@media (max-width: 600px) {
+  .auth-page {
+    min-height: calc(100vh - 4rem);
+    padding: 2.5rem 1rem;
+  }
+
+  .auth-card {
+    max-width: 420px;
+    padding: 2rem 1.25rem;
+    border-radius: 1rem;
+  }
+
+  .auth-card__brand {
+    margin-bottom: 1.6rem;
+  }
+
+  .auth-card__subtitle {
+    margin-bottom: 1.5rem;
+  }
+
+  .auth-form {
+    gap: 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-form__input,
+  .auth-form__link {
+    transition: none;
+  }
 }

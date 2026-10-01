@@ -21,7 +21,7 @@ export default function Login() {
     setError('')
     setSuccess('')
     const trimmedEmail = form.email.trim()
-    if (!/^\S+@\S+\.\S+$/.test(trimmedEmail)) {
+  if (!/^\S+@\S+\.\S+$/.test(trimmedEmail)) {
       setError('Please enter a valid email address, for example name@gmail.com.')
       return
     }
@@ -87,7 +87,7 @@ export default function Login() {
             <label className="auth-form__checkbox">
               <input type="checkbox" /> Remember me
             </label>
-            <a href="#" className="auth-form__link">Forgot password?</a>
+            <span className="auth-form__link">Forgot password?</span>
           </div>
 
           {error && <p className="auth-form__message auth-form__message--error" role="alert">{error}</p>}

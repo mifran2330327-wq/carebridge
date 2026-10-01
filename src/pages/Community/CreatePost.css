@@ -1,13 +1,19 @@
 .create-post {
-  padding-bottom: 70px;
+  padding: 48px 0 80px;
+  min-height: calc(100vh - 70px);
 }
 
 .create-post__card {
-  max-width: 720px;
+  max-width: 760px;
   margin: 0 auto;
-  padding: 32px 24px;
+  padding: 34px 36px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
 }
 
+/* Back button */
 .create-post__header {
   margin-bottom: 24px;
 }
@@ -15,31 +21,44 @@
 .create-post__back {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
+  border: 0;
+  background: transparent;
   color: var(--text-secondary);
   text-decoration: none;
-  font-size: 0.85rem;
-  padding: 8px 0;
+  font-size: 0.84rem;
+  font-weight: 600;
+  padding: 6px 0;
+  cursor: pointer;
+  transition: color var(--transition-fast);
 }
 
 .create-post__back:hover {
   color: var(--brand);
 }
 
+/* Heading */
 .create-post__card h1 {
-  font-size: 1.6rem;
-  margin-bottom: 6px;
+  margin: 0 0 8px;
+  font-size: clamp(1.55rem, 3vw, 2rem);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
 }
 
 .create-post__subtitle {
+  max-width: 620px;
+  margin: 0 0 28px;
   color: var(--text-secondary);
-  margin: 0 0 24px;
+  font-size: 0.92rem;
+  line-height: 1.65;
 }
 
+/* Form */
 .create-post__form {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 22px;
 }
 
 .create-post__field {
@@ -49,21 +68,50 @@
 }
 
 .create-post__field label {
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: var(--text-secondary);
+  color: var(--text-primary);
+  font-size: 0.84rem;
+  font-weight: 650;
 }
 
 .create-post__field input,
 .create-post__field textarea,
 .create-post__field select {
-  padding: 10px 12px;
+  width: 100%;
+  box-sizing: border-box;
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-sm);
   background: var(--bg-surface);
   color: var(--text-primary);
   font: inherit;
-  font-size: 0.95rem;
+  font-size: 0.92rem;
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast),
+    background var(--transition-fast);
+}
+
+.create-post__field input,
+.create-post__field select {
+  min-height: 44px;
+  padding: 10px 13px;
+}
+
+.create-post__field textarea {
+  min-height: 190px;
+  padding: 12px 13px;
+  line-height: 1.65;
+  resize: vertical;
+}
+
+.create-post__field input::placeholder,
+.create-post__field textarea::placeholder {
+  color: var(--text-muted);
+}
+
+.create-post__field input:hover,
+.create-post__field textarea:hover,
+.create-post__field select:hover {
+  border-color: var(--border-strong);
 }
 
 .create-post__field input:focus,
@@ -74,42 +122,45 @@
   box-shadow: 0 0 0 3px var(--brand-soft);
 }
 
-.create-post__field textarea {
-  resize: vertical;
-  min-height: 180px;
-  line-height: 1.6;
-}
-
+/* Anonymous option */
 .create-post__checkbox {
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  cursor: pointer;
-  font-size: 0.85rem;
+  margin-top: -2px;
+  padding: 12px 14px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  background: var(--bg-surface-alt);
   color: var(--text-secondary);
-  padding-top: 4px;
+  font-size: 0.84rem;
+  line-height: 1.5;
+  cursor: pointer;
+  transition:
+    border-color var(--transition-fast),
+    background var(--transition-fast);
+}
+
+.create-post__checkbox:hover {
+  border-color: var(--border-strong);
 }
 
 .create-post__checkbox input {
-  margin-top: 2px;
   width: 16px;
   height: 16px;
+  margin: 2px 0 0;
+  flex-shrink: 0;
   accent-color: var(--brand);
+  cursor: pointer;
 }
 
-.create-post__actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  padding-top: 8px;
-  border-top: 1px solid var(--border-subtle);
-  margin-top: 8px;
-}
-
+/* Messages */
 .create-post__message {
-  padding: 12px 16px;
+  margin-bottom: 20px;
+  padding: 12px 15px;
   border-radius: var(--radius-sm);
-  font-size: 0.85rem;
+  font-size: 0.84rem;
+  line-height: 1.5;
 }
 
 .create-post__message--error {
@@ -124,8 +175,70 @@
   border: 1px solid var(--success-border);
 }
 
-@media (max-width: 600px) {
+/* Bottom actions */
+.create-post__actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+  padding-top: 20px;
+  margin-top: 2px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+/* Loading spinner */
+.create-post .spin {
+  animation: create-post-spin 0.9s linear infinite;
+}
+
+@keyframes create-post-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Mobile */
+@media (max-width: 700px) {
+  .create-post {
+    padding: 28px 0 60px;
+  }
+
   .create-post__card {
-    padding: 20px 16px;
+    padding: 26px 20px;
+    border-radius: var(--radius-md);
+  }
+
+  .create-post__form {
+    gap: 18px;
+  }
+
+  .create-post__actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .create-post__actions > * {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .create-post {
+    padding-top: 20px;
+  }
+
+  .create-post__card {
+    padding: 22px 16px;
+    border-left: 0;
+    border-right: 0;
+    border-radius: 0;
+  }
+
+  .create-post__card h1 {
+    font-size: 1.45rem;
+  }
+
+  .create-post__subtitle {
+    font-size: 0.86rem;
   }
 }
