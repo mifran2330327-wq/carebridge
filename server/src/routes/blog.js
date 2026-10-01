@@ -48,6 +48,54 @@ function formatBlogPost(post) {
   }
 }
 
+// GET /my-posts - Get current doctor's blog posts (DOCTOR only)
+// Must be registered BEFORE GET /:id to prevent /my-posts being captured as :id
+router.get('/my-posts', requireAuth, async (request, response) => {
+  if (request.user.role !== 'DOCTOR') {
+    return response.status(403).json({ error: 'Doctor access required' })
+  }
+  try {
+    const professional = await prisma.professional.findUnique({
+      where: { ownerId: request.user.userId },
+    })
+    const where = professional ? { professionalId: professional.id } : { authorId: request.user.userId }
+    const posts = await prisma.blogPost.findMany({
+      where,
+      orderBy: { updatedAt: 'desc' },
+    })
+    response.json({ posts })
+  } catch (error) {
+    console.error('Failed to get my blog posts:', error)
+    response.status(500).json({ error: error.message || 'Failed to fetch your blog posts' })
+  }
+})
+
+// GET /:id - Get single blog post (public for published, author/admin for others)
+router.get('/:id', async (request, response) => {
+  try {
+    const post = await prisma.blogPost.findUnique({
+      where: { id: request.params.id },
+      include: {
+        author: { select: { id: true, name: true } },
+        professional: {
+          include: {
+            degrees: { include: { degree: true } },
+            specialties: { include: { specialty: true } },
+          },
+        },
+      },
+    })
+    if (!post) return response.status(404).json({ error: 'Blog post not found' })
+    if (post.status === 'DRAFT' && post.authorId !== request.user?.userId && request.user?.role !== 'ADMIN') {
+      return response.status(404).json({ error: 'Blog post not found' })
+    }
+    response.json({ post: formatBlogPost(post) })
+  } catch (error) {
+    console.error('Failed to get blog post:', error)
+    response.status(500).json({ error: error.message || 'Failed to fetch blog post' })
+  }
+})
+
 // GET / - List published blog posts (public)
 router.get('/', async (request, response) => {
   try {
@@ -83,53 +131,6 @@ router.get('/', async (request, response) => {
   } catch (error) {
     console.error('Failed to get blog posts:', error)
     response.status(500).json({ error: error.message || 'Failed to fetch blog posts' })
-  }
-})
-
-// GET /:id - Get single blog post (public for published, author/admin for others)
-router.get('/:id', async (request, response) => {
-  try {
-    const post = await prisma.blogPost.findUnique({
-      where: { id: request.params.id },
-      include: {
-        author: { select: { id: true, name: true } },
-        professional: {
-          include: {
-            degrees: { include: { degree: true } },
-            specialties: { include: { specialty: true } },
-          },
-        },
-      },
-    })
-    if (!post) return response.status(404).json({ error: 'Blog post not found' })
-    if (post.status === 'DRAFT' && post.authorId !== request.user?.userId && request.user?.role !== 'ADMIN') {
-      return response.status(404).json({ error: 'Blog post not found' })
-    }
-    response.json({ post: formatBlogPost(post) })
-  } catch (error) {
-    console.error('Failed to get blog post:', error)
-    response.status(500).json({ error: error.message || 'Failed to fetch blog post' })
-  }
-})
-
-// GET /my-posts - Get current doctor's blog posts (DOCTOR only)
-router.get('/my-posts', requireAuth, async (request, response) => {
-  if (request.user.role !== 'DOCTOR') {
-    return response.status(403).json({ error: 'Doctor access required' })
-  }
-  try {
-    const professional = await prisma.professional.findUnique({
-      where: { ownerId: request.user.userId },
-    })
-    const where = professional ? { professionalId: professional.id } : { authorId: request.user.userId }
-    const posts = await prisma.blogPost.findMany({
-      where,
-      orderBy: { updatedAt: 'desc' },
-    })
-    response.json({ posts })
-  } catch (error) {
-    console.error('Failed to get my blog posts:', error)
-    response.status(500).json({ error: error.message || 'Failed to fetch your blog posts' })
   }
 })
 

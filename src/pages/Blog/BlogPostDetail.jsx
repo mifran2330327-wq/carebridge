@@ -9,17 +9,22 @@ import {
   Share2,
   User,
   Award,
+  Edit3,
+  Trash2,
 } from 'lucide-react'
-import { getBlogPost } from '../../lib/api.js'
+import { getBlogPost, deleteBlogPost } from '../../lib/api.js'
+import { useAuth } from '../../context/AuthContext.jsx'
 import Badge from '../../components/Badge/Badge.jsx'
 import './BlogPostDetail.css'
 
 export default function BlogPostDetail() {
   const { id } = useParams()
   const navigate = useNavigate()
+  const { user } = useAuth()
   const [post, setPost] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [deleting, setDeleting] = useState(false)
 
   useEffect(() => {
     setLoading(true)
@@ -111,6 +116,34 @@ export default function BlogPostDetail() {
   const readTime = calculateReadTime(post.content)
   const authorName = getAuthorName(post)
   const authorCredentials = getAuthorCredentials(post)
+  const isOwner = user && post.author?.id === user.id
+
+  const formatHtmlContent = (content) => {
+    if (!content) return ''
+    const hasHtml = /<[^>]+>/.test(content)
+    if (hasHtml) return content
+    return content
+      .split(/\n\s*\n/)
+      .filter((para) => para.trim())
+      .map((para) => `<p>${para.trim().replace(/\n/g, '<br>')}</p>`)
+      .join('')
+  }
+
+  const handleDelete = async () => {
+    if (!window.confirm('Are you sure you want to delete this blog post? This action cannot be undone.')) {
+      return
+    }
+    setDeleting(true)
+    try {
+      await deleteBlogPost(post.id)
+      navigate('/blog')
+    } catch (err) {
+      console.error('Failed to delete blog post:', err)
+      alert(err.message || 'Failed to delete post. Please try again.')
+    } finally {
+      setDeleting(false)
+    }
+  }
 
   return (
     <div className="page blog-post-detail">
@@ -140,6 +173,32 @@ export default function BlogPostDetail() {
 
             {post.excerpt && (
               <p className="blog-post-detail__excerpt">{post.excerpt}</p>
+            )}
+
+            {isOwner && (
+              <div className="blog-post-detail__owner-actions">
+                <Link to={`/blog/${post.id}/edit`}>
+                  <button
+                    className="blog-post-detail__action-btn"
+                    type="button"
+                  >
+                    <Edit3 size={14} />
+                    Edit post
+                  </button>
+                </Link>
+                <button
+                  className="blog-post-detail__action-btn blog-post-detail__action-btn--danger"
+                  type="button"
+                  onClick={handleDelete}
+                  disabled={deleting}
+                >
+                  {deleting ? (
+                    <><Loader2 size={14} className="spin" /> Deleting...</>
+                  ) : (
+                    <><Trash2 size={14} /> Delete post</>
+                  )}
+                </button>
+              </div>
             )}
           </header>
 
@@ -196,16 +255,16 @@ export default function BlogPostDetail() {
 
           <div
             className="blog-post-detail__content"
-            style={{ whiteSpace: 'pre-wrap' }}
-          >
-            {post.content}
-          </div>
-
+            dangerouslySetInnerHTML={{ __html: formatHtmlContent(post.content) }}
+          />
           {post.references && (
-            <div className="blog-post-detail__references">
-              <h3>References</h3>
-              <p style={{ whiteSpace: 'pre-wrap' }}>{post.references}</p>
-            </div>
+          <div className="blog-post-detail__references">
+            <h3>References</h3>
+            <div
+              className="blog-post-detail__references-content"
+              dangerouslySetInnerHTML={{ __html: formatHtmlContent(post.references) }}
+            />
+          </div>
           )}
         </article>
 

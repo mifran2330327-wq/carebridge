@@ -185,6 +185,17 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
+}
+
+.blog__card-image-link {
+  display: block;
+  width: 100%;
+}
+
+.blog__card-image-link:hover .blog__card-image img {
+  transform: scale(1.05);
+  transition: transform 300ms ease;
 }
 
 .blog__card-body {
