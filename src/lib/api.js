@@ -180,3 +180,39 @@ export const deleteInstitution = (id) => adminRequest(`/institutions/${id}`, { m
 
 export const getAdminReports = () => adminRequest('/reports')
 export const resolveAdminReport = (id, body) => adminRequest(`/reports/${id}`, { method: 'PATCH', body: JSON.stringify(body) })
+
+export async function getBlogPosts(params = {}) {
+  const session = getSession()
+  const query = new URLSearchParams(Object.entries(params).filter(([, value]) => value))
+  return request(`/blog${query.toString() ? `?${query}` : ''}`, { headers: { Authorization: `Bearer ${session?.token || ''}` } })
+}
+
+export async function getBlogPost(id) {
+  const session = getSession()
+  return request(`/blog/${id}`, { headers: { Authorization: `Bearer ${session?.token || ''}` } })
+}
+
+export async function getMyBlogPosts() {
+  const session = getSession()
+  return request('/blog/my-posts', { headers: { Authorization: `Bearer ${session?.token || ''}` } })
+}
+
+export async function createBlogPost(form) {
+  const session = getSession()
+  return request('/blog', { method: 'POST', headers: { Authorization: `Bearer ${session?.token || ''}` }, body: JSON.stringify(form) })
+}
+
+export async function updateBlogPost(id, form) {
+  const session = getSession()
+  return request(`/blog/${id}`, { method: 'PATCH', headers: { Authorization: `Bearer ${session?.token || ''}` }, body: JSON.stringify(form) })
+}
+
+export async function deleteBlogPost(id) {
+  const session = getSession()
+  return request(`/blog/${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${session?.token || ''}` } })
+}
+
+export async function publishBlogPost(id, action = 'publish') {
+  const session = getSession()
+  return request(`/blog/${id}/publish`, { method: 'POST', headers: { Authorization: `Bearer ${session?.token || ''}` }, body: JSON.stringify({ action }) })
+}

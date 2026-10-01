@@ -242,28 +242,36 @@ export default function PostDetail() {
             <h2>Comments ({post._count?.comments || 0})</h2>
 
             {user ? (
-              <form className="post-detail__comment-form" onSubmit={handleAddComment}>
-                <textarea
-                  placeholder="Write a comment..."
-                  value={commentForm.body}
-                  onChange={(e) => setCommentForm((f) => ({ ...f, body: e.target.value }))}
-                  required
-                  rows={3}
-                />
-                <div className="post-detail__comment-options">
-                  <label className="post-detail__comment-anonymous">
-                    <input
-                      type="checkbox"
-                      checked={commentForm.isAnonymous}
-                      onChange={(e) => setCommentForm((f) => ({ ...f, isAnonymous: e.target.checked }))}
-                    />
-                    Post anonymously
-                  </label>
-                  <Button type="submit" variant="primary" size="sm" disabled={submittingComment}>
-                    {submittingComment ? <><Loader2 size={14} className="spin" /> Posting...</> : 'Post comment'}
-                  </Button>
-                </div>
-              </form>
+              (['PARENT', 'DOCTOR'].includes(user.role) ? (
+                <form className="post-detail__comment-form" onSubmit={handleAddComment}>
+                  <textarea
+                    placeholder="Write a comment..."
+                    value={commentForm.body}
+                    onChange={(e) => setCommentForm((f) => ({ ...f, body: e.target.value }))}
+                    required
+                    rows={3}
+                  />
+                  <div className="post-detail__comment-options">
+                    <label className="post-detail__comment-anonymous">
+                      <input
+                        type="checkbox"
+                        checked={commentForm.isAnonymous}
+                        onChange={(e) => setCommentForm((f) => ({ ...f, isAnonymous: e.target.checked }))}
+                      />
+                      Post anonymously
+                    </label>
+                    <Button type="submit" variant="primary" size="sm" disabled={submittingComment}>
+                      {submittingComment ? <><Loader2 size={14} className="spin" /> Posting...</> : 'Post comment'}
+                    </Button>
+                  </div>
+                </form>
+              ) : (
+                <p className="post-detail__login-prompt">
+                  {user?.role === 'ADMIN'
+                    ? 'Administrators can moderate but cannot comment on community posts.'
+                    : 'Your account type does not have commenting privileges.'}
+                </p>
+              ))
             ) : (
               <p className="post-detail__login-prompt">
                 <Link to="/login" state={{ from: `/community/${postId}` }}>Log in</Link> to join the discussion.

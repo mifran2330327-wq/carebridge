@@ -116,6 +116,10 @@ export default function Community() {
       return
     }
 
+    if (user.role !== 'PARENT') {
+      return
+    }
+
     navigate('/community/new')
   }
 
@@ -144,6 +148,7 @@ export default function Community() {
             />
           </div>
 
+          {(!user || user.role === 'PARENT') && (
           <div className="community__hero-action">
             <Button
               variant="primary"
@@ -153,13 +158,20 @@ export default function Community() {
               New post
             </Button>
 
-
             <p>
               {user
                 ? 'Start a conversation with the community.'
                 : 'Sign in to create a discussion.'}
             </p>
           </div>
+          )}
+          {user && user.role !== 'PARENT' && (
+            <p className="community__role-notice">
+              {user.role === 'DOCTOR'
+                ? 'As a healthcare professional, you can comment on existing discussions.'
+                : 'You can browse and comment on existing discussions.'}
+            </p>
+          )}
         </section>
 
         {/* MAIN LAYOUT */}

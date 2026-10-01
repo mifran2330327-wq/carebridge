@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
 import {
   BookOpen,
   Filter,
@@ -7,10 +8,13 @@ import {
   FileText,
   X,
   RotateCcw,
+  ChevronRight,
+  Pen,
 } from 'lucide-react'
 import SectionHeading from '../../components/SectionHeading/SectionHeading.jsx'
 import ResourceCard from '../../components/ResourceCard/ResourceCard.jsx'
-import { getResources } from '../../lib/api.js'
+import { getResources, getBlogPosts } from '../../lib/api.js'
+import { useAuth } from '../../context/AuthContext.jsx'
 import './Resources.css'
 
 function getYouTubeEmbedUrl(url) {
@@ -43,12 +47,16 @@ function getYouTubeEmbedUrl(url) {
 }
 
 export default function Resources() {
+  const { user } = useAuth()
   const [items, setItems] = useState([])
   const [activeType, setActiveType] = useState(null)
   const [activeSpecialty, setActiveSpecialty] = useState('')
   const [video, setVideo] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [activeTab, setActiveTab] = useState('resources')
+  const [blogPosts, setBlogPosts] = useState([])
+  const [blogLoading, setBlogLoading] = useState(false)
 
   useEffect(() => {
     setLoading(true)
@@ -71,6 +79,21 @@ export default function Resources() {
       })
       .finally(() => setLoading(false))
   }, [])
+
+  useEffect(() => {
+    if (activeTab === 'blogs') {
+      setBlogLoading(true)
+      getBlogPosts({ take: 100 })
+        .then(({ posts }) => {
+          setBlogPosts(Array.isArray(posts) ? posts : [])
+        })
+        .catch((err) => {
+          console.error('Failed to load blog posts:', err)
+          setBlogPosts([])
+        })
+        .finally(() => setBlogLoading(false))
+    }
+  }, [activeTab])
 
   const types = [
     ...new Set(
@@ -149,26 +172,122 @@ export default function Resources() {
             />
           </div>
 
-          <div className="resources__hero-stats">
-            <div className="resources__stat">
-              <FileText size={18} />
-              <div>
-                <strong>{articleCount}</strong>
-                <span>Articles</span>
-              </div>
-            </div>
-
-            <div className="resources__stat">
-              <Video size={18} />
-              <div>
-                <strong>{videoCount}</strong>
-                <span>Videos</span>
-              </div>
-            </div>
+          <div className="resources__tabs">
+            <button
+              type="button"
+              className={`resources__tab ${activeTab === 'resources' ? 'resources__tab--active' : ''}`}
+              onClick={() => setActiveTab('resources')}
+            >
+              Library Resources
+            </button>
+            <button
+              type="button"
+              className={`resources__tab ${activeTab === 'blogs' ? 'resources__tab--active' : ''}`}
+              onClick={() => setActiveTab('blogs')}
+            >
+              From Our Doctors
+            </button>
           </div>
+
+          {activeTab === 'resources' && (
+            <div className="resources__hero-stats-box">
+              <div className="resources__stat">
+                <FileText size={18} />
+                <div>
+                  <strong>{articleCount}</strong>
+                  <span>Articles</span>
+                </div>
+              </div>
+
+              <div className="resources__stat">
+                <Video size={18} />
+                <div>
+                  <strong>{videoCount}</strong>
+                  <span>Videos</span>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'blogs' && user?.role === 'DOCTOR' && (
+            <Link to="/blog/new" className="resources__write-blog">
+              <Pen size={14} />
+              Write a blog post
+            </Link>
+          )}
         </section>
 
-        <section className="resources__filters">
+        {/* BLOG POSTS TAB */}
+        {activeTab === 'blogs' && (
+          <section className="resources__blog-section">
+            {blogLoading && (
+              <div className="resources__state resources__state--loading">
+                <div className="resources__spinner" />
+                <div>
+                  <strong>Loading articles</strong>
+                  <p>Fetching the latest doctor-authored content...</p>
+                </div>
+              </div>
+            )}
+
+            {!blogLoading && blogPosts.length > 0 && (
+              <div className="blog__grid">
+                {blogPosts.map((post) => (
+                  <article key={post.id} className="blog__card">
+                    {post.coverImage && (
+                      <div className="blog__card-image">
+                        <img src={post.coverImage} alt={post.title} loading="lazy" />
+                      </div>
+                    )}
+                    <div className="blog__card-body">
+                      {post.category && (
+                        <span className="blog__card-category">{post.category}</span>
+                      )}
+                      <h3 className="blog__card-title">
+                        <Link to={`/blog/${post.id}`}>{post.title}</Link>
+                      </h3>
+                      {post.excerpt && (
+                        <p className="blog__card-excerpt">{post.excerpt}</p>
+                      )}
+                      <div className="blog__card-meta">
+                        <span className="blog__author-name">
+                          {post.professional?.name || post.author?.name || 'Doctor'}
+                        </span>
+                        <span className="blog__date">
+                          {new Date(post.publishedAt || post.createdAt).toLocaleDateString('en-US', {
+                            month: 'short',
+                            day: 'numeric',
+                            year: 'numeric',
+                          })}
+                        </span>
+                      </div>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            )}
+
+            {!blogLoading && blogPosts.length === 0 && (
+              <div className="blog__empty">
+                <div className="blog__empty-icon">
+                  <BookOpen size={27} />
+                </div>
+                <div className="blog__empty-content">
+                  <h3>No blog posts yet</h3>
+                  <p>
+                    Our doctors are working on creating educational content.
+                    Check back soon!
+                  </p>
+                </div>
+              </div>
+            )}
+          </section>
+        )}
+
+        {/* RESOURCES TAB */}
+        {activeTab === 'resources' && (
+          <>
+            <section className="resources__filters">
 
           <div className="resources__filter-heading">
             <div>
@@ -394,7 +513,8 @@ export default function Resources() {
             </div>
           </div>
         )}
-
+        </>
+      )}
       </div>
     </div>
   )

@@ -13,6 +13,10 @@ import Schools from './pages/Schools/Schools.jsx'
 import SmartSearch from './pages/SmartSearch/SmartSearch.jsx'
 import Appointments from './pages/Appointments/Appointments.jsx'
 import Resources from './pages/Resources/Resources.jsx'
+import Blog from './pages/Blog/Blog.jsx'
+import BlogPostDetail from './pages/Blog/BlogPostDetail.jsx'
+import CreateBlogPost from './pages/Blog/CreateBlogPost.jsx'
+import EditBlogPost from './pages/Blog/EditBlogPost.jsx'
 import Community from './pages/Community/Community.jsx'
 import CreatePost from './pages/Community/CreatePost.jsx'
 import PostDetail from './pages/Community/PostDetail.jsx'
@@ -41,6 +45,10 @@ export default function App() {
         <Route path="/institutions/:institutionId" element={<InstitutionDetail />} />
         <Route path="/search" element={<RequireAuth><SmartSearch /></RequireAuth>} />
         <Route path="/resources" element={<RequireAuth><Resources /></RequireAuth>} />
+        <Route path="/blog" element={<RequireAuth><Blog /></RequireAuth>} />
+        <Route path="/blog/:id" element={<RequireAuth><BlogPostDetail /></RequireAuth>} />
+        <Route path="/blog/new" element={<RequireRole role="DOCTOR"><CreateBlogPost /></RequireRole>} />
+        <Route path="/blog/:id/edit" element={<RequireRole role="DOCTOR"><EditBlogPost /></RequireRole>} />
         <Route path="/community" element={<RequireAuth><Community /></RequireAuth>} />
         <Route path="/community/new" element={<RequireAuth><CreatePost /></RequireAuth>} />
         <Route path="/community/:postId" element={<RequireAuth><PostDetail /></RequireAuth>} />
