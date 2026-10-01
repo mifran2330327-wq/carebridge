@@ -141,9 +141,11 @@ export default function Blog() {
             {filteredPosts.map((post) => (
               <article key={post.id} className="blog__card">
                 {post.coverImage && (
-                  <div className="blog__card-image">
-                    <img src={post.coverImage} alt={post.title} loading="lazy" />
-                  </div>
+                  <Link to={`/blog/${post.id}`} className="blog__card-image-link">
+                    <div className="blog__card-image">
+                      <img src={post.coverImage} alt={post.title} loading="lazy" />
+                    </div>
+                  </Link>
                 )}
                 <div className="blog__card-body">
                   {post.category && (
