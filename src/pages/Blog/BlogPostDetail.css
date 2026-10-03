@@ -1,6 +1,5 @@
 .blog-post-detail {
   min-height: calc(100vh - 4.25rem);
-  padding: 34px 0 76px;
   background:
     radial-gradient(
       circle at 88% 0%,

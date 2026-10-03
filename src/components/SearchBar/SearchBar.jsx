@@ -1,8 +1,6 @@
 import { Search, MapPin, SlidersHorizontal } from 'lucide-react'
 import './SearchBar.css'
 
-// Shared search input used on Home + Smart Search + directory pages.
-// Purely presentational for now — wire up onSearch when the API exists.
 export default function SearchBar({
   placeholder = 'Search therapists, schools, or conditions...',
   value,
@@ -10,10 +8,19 @@ export default function SearchBar({
   location,
   onLocationChange,
   onFilterClick,
+  onSearch,
   compact = false,
 }) {
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    onSearch?.(value || '', location || '')
+  }
+
   return (
-    <div className={`search-bar ${compact ? 'search-bar--compact' : ''}`}>
+    <form
+      className={`search-bar ${compact ? 'search-bar--compact' : ''}`}
+      onSubmit={handleSubmit}
+    >
       <div className="search-bar__field search-bar__field--main">
         <Search size={18} />
         <input
@@ -37,10 +44,19 @@ export default function SearchBar({
       </div>
 
       {onFilterClick && (
-        <button className="search-bar__filter" onClick={onFilterClick} aria-label="Filters">
+        <button
+          type="button"
+          className="search-bar__filter"
+          onClick={onFilterClick}
+          aria-label="Filters"
+        >
           <SlidersHorizontal size={17} />
         </button>
       )}
-    </div>
+
+      <button type="submit" className="search-bar__submit" aria-label="Search">
+        <Search size={17} />
+      </button>
+    </form>
   )
 }

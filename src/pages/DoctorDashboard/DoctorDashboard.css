@@ -1,4 +1,5 @@
-.doctor-dashboard { padding-bottom: 60px; }
+.doctor-dashboard {
+}
 .doctor-dashboard__header { display:flex; justify-content:space-between; gap:20px; align-items:center; padding:28px 0; }
 .doctor-dashboard__header h1 { margin:4px 0; font-size:1.6rem; }
 .doctor-dashboard__header p { color:var(--text-secondary); margin:4px 0; }

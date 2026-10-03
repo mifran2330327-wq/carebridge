@@ -4,7 +4,6 @@
 
 .appointments {
   min-height: calc(100vh - 4.25rem);
-  padding: 30px 0 72px;
   background:
     radial-gradient(
       circle at 88% 0%,

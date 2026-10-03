@@ -169,6 +169,76 @@
   opacity: 0.7;
 }
 
+.auth-form__toggle-password {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border: none;
+  background: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.auth-form__toggle-password:hover {
+  background: var(--bg-surface-alt);
+  color: var(--brand);
+}
+
+.password-strength {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-top: 0.5rem;
+}
+
+.password-strength__bars {
+  display: flex;
+  gap: 0.25rem;
+  flex-grow: 1;
+}
+
+.password-strength__bar {
+  height: 4px;
+  flex: 1;
+  border-radius: 999px;
+  background: var(--border-subtle);
+  transition: background var(--transition-fast);
+}
+
+.password-strength__bar--0 {
+  background: var(--border-subtle);
+}
+
+.password-strength__bar--1 {
+  background: var(--danger);
+}
+
+.password-strength__bar--2 {
+  background: var(--warning);
+}
+
+.password-strength__bar--3 {
+  background: #b5c42a;
+}
+
+.password-strength__bar--4 {
+  background: var(--success);
+}
+
+.password-strength__label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+  min-width: 3.5rem;
+  text-align: right;
+}
+
 .auth-form__field textarea {
   width: 100%;
   min-height: 90px;

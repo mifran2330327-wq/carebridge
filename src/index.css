@@ -29,6 +29,7 @@
   --success: #3f8f5f;
   --warning: #d99a2b;
   --danger: #c1503f;
+  --error: var(--danger);
 
   /* ---- Typography ---- */
   --font-body: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -56,6 +57,7 @@
   --bg-surface: #ffffff;
   --bg-surface-alt: var(--teal-100);
   --bg-sunken: #eef4f5;
+  --bg-page: var(--bg-app);
 
   --text-primary: var(--teal-900);
   --text-secondary: #4b6069;
@@ -83,6 +85,7 @@
   --bg-surface: #16262c;
   --bg-surface-alt: #1c2f36;
   --bg-sunken: #0c1518;
+  --bg-page: var(--bg-app);
 
   --text-primary: #eef4f5;
   --text-secondary: #b7c7cc;
@@ -195,6 +198,7 @@ img {
 /* Shared "page" top padding so content clears the fixed navbar */
 .page {
   padding-top: 88px;
+  padding-bottom: clamp(3rem, 6vw, 4.5rem);
   min-height: 70vh;
 }
 

@@ -1,16 +1,32 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Mail, Lock, HeartHandshake } from 'lucide-react'
+import { Mail, Lock, HeartHandshake, Eye, EyeOff } from 'lucide-react'
 import Button from '../../components/Button/Button.jsx'
 import { login, saveSession } from '../../lib/api.js'
 import './Login.css'
+
+const REMEMBER_EMAIL_KEY = 'carebridge_remember_email'
 
 export default function Login() {
   const [form, setForm] = useState({ email: '', password: '' })
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [loading, setLoading] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
+  const [remember, setRemember] = useState(false)
   const navigate = useNavigate()
+
+  useEffect(() => {
+    try {
+      const storedEmail = localStorage.getItem(REMEMBER_EMAIL_KEY)
+      if (storedEmail) {
+        setForm((f) => ({ ...f, email: storedEmail }))
+        setRemember(true)
+      }
+    } catch (e) {
+      // localStorage unavailable — silently ignore
+    }
+  }, [])
 
   function handleChange(e) {
     setForm((f) => ({ ...f, [e.target.name]: e.target.value }))
@@ -21,12 +37,12 @@ export default function Login() {
     setError('')
     setSuccess('')
     const trimmedEmail = form.email.trim()
-  if (!/^\S+@\S+\.\S+$/.test(trimmedEmail)) {
-  setError(
-    'Please enter a valid email address, for example name@gmail.com.'
-  )
-  return
-}
+    if (!/^\S+@\S+\.\S+$/.test(trimmedEmail)) {
+      setError(
+        'Please enter a valid email address, for example name@gmail.com.'
+      )
+      return
+    }
     if (!form.password) {
       setError('Please enter your password.')
       return
@@ -34,6 +50,15 @@ export default function Login() {
     setLoading(true)
     login({ email: trimmedEmail, password: form.password })
       .then((data) => {
+        try {
+          if (remember) {
+            localStorage.setItem(REMEMBER_EMAIL_KEY, trimmedEmail)
+          } else {
+            localStorage.removeItem(REMEMBER_EMAIL_KEY)
+          }
+        } catch (e) {
+          // silently ignore
+        }
         saveSession(data)
         const role = data.user?.role
         const dest = role === 'ADMIN' ? '/admin' : '/dashboard'
@@ -74,19 +99,31 @@ export default function Login() {
             <div className="auth-form__input">
               <Lock size={16} />
               <input
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 name="password"
                 placeholder="••••••••"
                 value={form.password}
                 onChange={handleChange}
                 required
               />
+              <button
+                type="button"
+                className="auth-form__toggle-password"
+                onClick={() => setShowPassword((v) => !v)}
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+              >
+                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
             </div>
           </label>
 
           <div className="auth-form__row">
   <label className="auth-form__checkbox">
-    <input type="checkbox" /> Remember me
+    <input
+      type="checkbox"
+      checked={remember}
+      onChange={(e) => setRemember(e.target.checked)}
+    /> Remember me
   </label>
 </div>
 

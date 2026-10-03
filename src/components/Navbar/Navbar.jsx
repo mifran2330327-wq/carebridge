@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { NavLink, Link, useNavigate, useLocation } from 'react-router-dom'
 import { Menu, X, HeartHandshake, UserCircle, LogOut, ShieldCheck, Bell, Loader2 } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext.jsx'
@@ -28,6 +28,10 @@ export default function Navbar() {
   const navigate = useNavigate()
   const location = useLocation()
 
+  const notificationsRef = useRef(null)
+  const accountRef = useRef(null)
+  const menuRef = useRef(null)
+
   const isGuestPage = GUEST_PAGES.includes(location.pathname)
 
   async function loadNotifications() {
@@ -49,6 +53,33 @@ export default function Navbar() {
     else { setNotifications([]); setUnreadCount(0) }
   }, [user])
 
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (notificationsRef.current && !notificationsRef.current.contains(e.target)) {
+        setNotificationsOpen(false)
+      }
+      if (accountRef.current && !accountRef.current.contains(e.target)) {
+        setAccountOpen(false)
+      }
+      if (menuRef.current && !menuRef.current.contains(e.target) && e.target.closest('.navbar__burger') === null) {
+        setOpen(false)
+      }
+    }
+    function handleKeyDown(e) {
+      if (e.key === 'Escape') {
+        setNotificationsOpen(false)
+        setAccountOpen(false)
+        setOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    document.addEventListener('keydown', handleKeyDown)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [])
+
   function handleLogout() { signOut(); setAccountOpen(false); navigate('/') }
 
   return (
@@ -61,7 +92,7 @@ export default function Navbar() {
 
         {/* Nav links — only when logged in AND not on guest page */}
         {user && !isGuestPage && (
-          <nav className={`navbar__links ${open ? 'navbar__links--open' : ''}`}>
+          <nav ref={menuRef} className={`navbar__links ${open ? 'navbar__links--open' : ''}`}>
             {AUTH_LINKS.map((link) => (
               <NavLink
                 key={link.to}
@@ -90,8 +121,8 @@ export default function Navbar() {
           {user ? (
             <>
               {/* Notifications */}
-              <div className="navbar__notifications" onClick={() => setNotificationsOpen((v) => !v)}>
-                <button className="navbar__notify-btn" aria-label="Notifications" aria-expanded={notificationsOpen}>
+              <div ref={notificationsRef} className="navbar__notifications">
+                <button className="navbar__notify-btn" onClick={() => setNotificationsOpen((v) => !v)} aria-label="Notifications" aria-expanded={notificationsOpen}>
                   <Bell size={20} />
                   {unreadCount > 0 && <span className="navbar__notify-badge">{unreadCount > 9 ? '9+' : unreadCount}</span>}
                 </button>
@@ -141,7 +172,7 @@ export default function Navbar() {
               </div>
 
               {/* Account menu */}
-              <div className="navbar__account">
+              <div ref={accountRef} className="navbar__account">
                 <button className="navbar__account-toggle" onClick={() => setAccountOpen((v) => !v)} aria-expanded={accountOpen}>
                   <UserCircle size={20} /> <span>{(user.name || '').split(' ')[0] || 'Account'}</span>
                 </button>

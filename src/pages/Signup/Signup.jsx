@@ -1,10 +1,24 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Mail, Lock, User, HeartHandshake } from 'lucide-react'
+import { Mail, Lock, User, HeartHandshake, Eye, EyeOff } from 'lucide-react'
 import Button from '../../components/Button/Button.jsx'
 import { register, saveSession } from '../../lib/api.js'
 import TagInput from '../../components/TagInput/TagInput.jsx'
 import './Signup.css'
+
+function getPasswordStrength(pw) {
+  if (!pw) return { score: 0, label: '' }
+  let score = 0
+  const len = pw.length
+  if (len >= 8) score++
+  if (len >= 12) score++
+  if (/[A-Z]/.test(pw)) score++
+  if (/[0-9]/.test(pw)) score++
+  if (/[^A-Za-z0-9]/.test(pw)) score++
+  score = Math.min(score, 4)
+  const labels = ['Too weak', 'Weak', 'Fair', 'Good', 'Strong']
+  return { score, label: labels[score] }
+}
 
 export default function Signup() {
   const [form, setForm] = useState({
@@ -30,6 +44,8 @@ export default function Signup() {
 
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
+  const [confirmPassword, setConfirmPassword] = useState('')
 
   const navigate = useNavigate()
 
@@ -72,6 +88,11 @@ export default function Signup() {
     // Password validation
     if (form.password.length < 8) {
       setError('Your password must be at least 8 characters long.')
+      return
+    }
+
+    if (form.password !== confirmPassword) {
+      setError('Passwords do not match. Please re-enter the same password in both fields.')
       return
     }
 
@@ -447,11 +468,59 @@ export default function Signup() {
               <Lock size={16} />
 
               <input
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 name="password"
                 placeholder="At least 8 characters"
                 value={form.password}
                 onChange={handleChange}
+                required
+              />
+              <button
+                type="button"
+                className="auth-form__toggle-password"
+                onClick={() => setShowPassword((v) => !v)}
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+              >
+                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
+            </div>
+
+            {form.password && (
+              <div className="password-strength" aria-live="polite">
+                <div className="password-strength__bars">
+                  {[0, 1, 2, 3].map((i) => (
+                    <span
+                      key={i}
+                      className={`password-strength__bar password-strength__bar--${
+                        getPasswordStrength(form.password).score > i
+                          ? getPasswordStrength(form.password).score
+                          : 0
+                      }`}
+                    />
+                  ))}
+                </div>
+                <span className="password-strength__label">
+                  {getPasswordStrength(form.password).label}
+                </span>
+              </div>
+            )}
+          </label>
+
+          {/* Confirm password */}
+          <label className="auth-form__field">
+            <span>Confirm password</span>
+
+            <div className="auth-form__input">
+              <Lock size={16} />
+
+              <input
+                type={showPassword ? 'text' : 'password'}
+                placeholder="Re-type your password"
+                value={confirmPassword}
+                onChange={(e) => {
+                  setConfirmPassword(e.target.value)
+                  if (error) setError('')
+                }}
                 required
               />
             </div>
