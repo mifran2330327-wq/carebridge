@@ -1,203 +1,420 @@
+/* =========================================================
+   CAREBRIDGE - PROFESSIONAL CARD
+   ========================================================= */
+
 .pro-card {
-  position: relative;
-  background: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
-  border-radius: 18px;
-  padding: 22px;
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  box-sizing: border-box;
+
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  min-height: 100%;
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+
+  padding: 1.25rem;
+
+  background: var(--bg-surface, #ffffff);
+  border: 1px solid var(--border-subtle, #d9e5e8);
+  border-radius: 16px;
+
+  box-shadow: 0 4px 14px rgba(25, 63, 74, 0.06);
+
   transition:
-    transform 180ms ease,
-    box-shadow 180ms ease,
-    border-color 180ms ease;
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .pro-card:hover {
-  transform: translateY(-4px);
-  border-color: rgba(20, 184, 166, 0.35);
-  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.09);
+  transform: translateY(-2px);
+  border-color: #c5dadd;
+  box-shadow: 0 10px 24px rgba(25, 63, 74, 0.1);
 }
 
-/* ---------- Header ---------- */
+
+/* =========================================================
+   HEADER
+   ========================================================= */
 
 .pro-card__top {
   display: flex;
-  align-items: center;
-  gap: 13px;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 0.85rem;
 }
 
 .pro-card__avatar {
-  width: 52px;
-  height: 52px;
-  flex-shrink: 0;
-  border-radius: 14px;
-  background: linear-gradient(
-    135deg,
-    var(--brand-soft),
-    var(--teal-50)
-  );
-  color: var(--brand);
-  font-weight: 700;
-  font-size: 0.9rem;
+  width: 46px;
+  height: 46px;
+  flex: 0 0 46px;
+
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgba(20, 184, 166, 0.16);
+
+  border: 1px solid #c9e1e5;
+  border-radius: 12px;
+
+  background: #edf6f7;
+  color: #2f6675;
+
+  font-size: 0.85rem;
+  font-weight: 800;
 }
 
 .pro-card__heading {
   min-width: 0;
+  flex: 1;
 }
 
 .pro-card__name {
-  margin: 0;
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 1.02rem;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+
+  margin: 0;
+
+  color: var(--text-primary, #17313b);
+  font-size: 1rem;
   line-height: 1.35;
-  color: var(--text-primary);
-  font-weight: 700;
+  font-weight: 800;
+
+  overflow-wrap: anywhere;
 }
 
 .pro-card__verified {
-  flex-shrink: 0;
-  color: var(--brand);
+  flex: 0 0 auto;
+  color: #2f6675;
 }
 
 .pro-card__role {
-  margin: 4px 0 0;
-  font-size: 0.84rem;
-  line-height: 1.4;
-  color: var(--text-muted);
+  margin: 0.18rem 0 0;
+
+  color: var(--text-muted, #718891);
+  font-size: 0.82rem;
+  line-height: 1.35;
 }
 
-/* ---------- Specialties ---------- */
+
+/* =========================================================
+   SPECIALTIES
+   ========================================================= */
 
 .pro-card__tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 0.4rem;
+
+  margin-bottom: 0.7rem;
 }
 
-/* ---------- Credentials ---------- */
+
+/* =========================================================
+   QUALIFICATIONS
+   ========================================================= */
 
 .pro-card__credentials {
-  padding: 10px 12px;
-  border-radius: 10px;
-  background: var(--bg-surface-alt);
-  border: 1px solid var(--border-subtle);
-  color: var(--text-secondary);
-  font-size: 0.8rem;
+  margin-bottom: 0.7rem;
+  padding: 0.65rem 0.75rem;
+
+  border-radius: 9px;
+
+  background: #edf4f6;
+  color: #385a65;
+
+  font-size: 0.78rem;
   line-height: 1.5;
+
+  overflow-wrap: anywhere;
 }
 
-/* ---------- Status badges ---------- */
+.pro-card__credentials strong {
+  color: #17313b;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   STATUS BADGES
+   ========================================================= */
 
 .pro-card__badges {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 0.4rem;
+
+  margin-bottom: 0.75rem;
 }
 
-/* ---------- Location ---------- */
+
+/* =========================================================
+   LOCATION
+   ========================================================= */
 
 .pro-card__meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  font-size: 0.82rem;
-  color: var(--text-secondary);
+  margin-bottom: 0.75rem;
 }
 
 .pro-card__meta-item {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 0.35rem;
+
+  color: var(--text-muted, #718891);
+
+  font-size: 0.8rem;
   line-height: 1.4;
 }
 
 .pro-card__meta-item svg {
-  color: var(--brand);
-  flex-shrink: 0;
+  flex: 0 0 auto;
+  color: #2f6675;
 }
 
-/* ---------- Availability ---------- */
+.pro-card__meta-item > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   PRACTICE / AVAILABILITY DETAILS
+   ========================================================= */
 
 .pro-card__availability-detail {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  padding: 12px 13px;
-  border-left: 3px solid var(--brand);
-  border-radius: 0 10px 10px 0;
-  background: var(--bg-surface-alt);
-  color: var(--text-secondary);
-  font-size: 0.78rem;
+  gap: 0.35rem;
+
+  margin-bottom: 0.9rem;
+  padding: 0.7rem 0.75rem;
+
+  border-left: 3px solid #2f6675;
+  border-radius: 0 9px 9px 0;
+
+  background: #edf4f6;
+  color: #526f78;
+
+  font-size: 0.76rem;
   line-height: 1.45;
+
+  overflow-wrap: anywhere;
 }
 
 .pro-card__availability-detail strong {
-  color: var(--text-primary);
-  font-weight: 600;
+  color: #17313b;
+  font-weight: 750;
 }
 
-/* ---------- Footer ---------- */
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
 
 .pro-card__footer {
   margin-top: auto;
-  padding-top: 15px;
-  border-top: 1px solid var(--border-subtle);
+  padding-top: 0.95rem;
 
   display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 14px;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  border-top: 1px solid #dce7ea;
+}
+
+.pro-card__fee {
+  min-width: 0;
 }
 
 .pro-card__price {
   margin: 0;
-  color: var(--text-primary);
-  font-size: 0.92rem;
-  font-weight: 700;
+
+  color: #17313b;
+
+  font-size: 0.82rem;
+  line-height: 1.35;
+  font-weight: 800;
+
+  overflow-wrap: anywhere;
 }
 
 .pro-card__availability {
-  margin: 4px 0 0;
   display: flex;
-  align-items: center;
-  gap: 5px;
-  color: var(--success);
-  font-size: 0.76rem;
-  line-height: 1.35;
+  align-items: flex-start;
+  gap: 0.3rem;
+
+  margin: 0.35rem 0 0;
+
+  color: #78919a;
+
+  font-size: 0.72rem;
+  line-height: 1.4;
+
+  overflow-wrap: anywhere;
 }
+
+.pro-card__availability svg {
+  flex: 0 0 auto;
+  margin-top: 1px;
+  color: #2f6675;
+}
+
+
+/* =========================================================
+   ACTION BUTTONS
+   ========================================================= */
 
 .pro-card__actions {
-  flex-shrink: 0;
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: stretch;
+
+  gap: 0.5rem;
 }
 
-/* ---------- Responsive ---------- */
+.pro-card__profile-link,
+.pro-card__call-button {
+  min-height: 38px;
 
-@media (max-width: 600px) {
+  box-sizing: border-box;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 0.35rem;
+
+  padding: 0 0.7rem;
+
+  border-radius: 8px;
+
+  font-family: inherit;
+  font-size: 0.75rem;
+  font-weight: 700;
+
+  text-decoration: none;
+  white-space: nowrap;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.18s ease,
+    background 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+
+/* View profile */
+
+.pro-card__profile-link {
+  flex: 1;
+
+  border: 1px solid #a9c6cd;
+  background: #ffffff;
+  color: #17313b;
+}
+
+.pro-card__profile-link:hover {
+  transform: translateY(-1px);
+
+  border-color: #2f6675;
+  background: #f1f7f8;
+
+  text-decoration: none;
+}
+
+
+/* Call doctor */
+
+.pro-card__call-button {
+  flex: 1;
+
+  border: 1px solid #2f6675;
+  background: #2f6675;
+  color: #ffffff;
+}
+
+.pro-card__call-button:hover {
+  transform: translateY(-1px);
+
+  background: #255765;
+
+  box-shadow: 0 7px 16px rgba(31, 78, 91, 0.16);
+
+  text-decoration: none;
+}
+
+
+/* Book session button */
+
+.pro-card__actions .btn {
+  flex: 1;
+
+  min-height: 38px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 900px) {
+
   .pro-card {
-    padding: 18px;
-    border-radius: 15px;
+    padding: 1.1rem;
   }
 
-  .pro-card__footer {
-    align-items: stretch;
-    flex-direction: column;
+  .pro-card__actions {
+    gap: 0.4rem;
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 760px) {
+
+  .pro-card {
+    padding: 1rem;
   }
 
   .pro-card__actions {
     width: 100%;
   }
 
+  .pro-card__profile-link,
+  .pro-card__call-button,
+  .pro-card__actions .btn {
+    flex: 1;
+  }
+
+}
+
+
+@media (max-width: 480px) {
+
+  .pro-card__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .pro-card__profile-link,
+  .pro-card__call-button,
   .pro-card__actions .btn {
     width: 100%;
-    justify-content: center;
   }
+
 }

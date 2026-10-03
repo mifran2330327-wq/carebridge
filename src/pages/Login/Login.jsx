@@ -22,9 +22,11 @@ export default function Login() {
     setSuccess('')
     const trimmedEmail = form.email.trim()
   if (!/^\S+@\S+\.\S+$/.test(trimmedEmail)) {
-      setError('Please enter a valid email address, for example name@gmail.com.')
-      return
-    }
+  setError(
+    'Please enter a valid email address, for example name@gmail.com.'
+  )
+  return
+}
     if (!form.password) {
       setError('Please enter your password.')
       return
@@ -33,7 +35,6 @@ export default function Login() {
     login({ email: trimmedEmail, password: form.password })
       .then((data) => {
         saveSession(data)
-        setSuccess('Signed in successfully.')
         const role = data.user?.role
         const dest = role === 'ADMIN' ? '/admin' : '/dashboard'
         navigate(dest, { replace: true })
@@ -84,14 +85,13 @@ export default function Login() {
           </label>
 
           <div className="auth-form__row">
-            <label className="auth-form__checkbox">
-              <input type="checkbox" /> Remember me
-            </label>
-            <span className="auth-form__link">Forgot password?</span>
-          </div>
+  <label className="auth-form__checkbox">
+    <input type="checkbox" /> Remember me
+  </label>
+</div>
 
           {error && <p className="auth-form__message auth-form__message--error" role="alert">{error}</p>}
-          {success && <p className="auth-form__message auth-form__message--success" role="status">{success}</p>}
+      
 
           <Button type="submit" variant="primary" className="auth-form__submit" disabled={loading}>
             {loading ? 'Logging in...' : 'Log in'}
