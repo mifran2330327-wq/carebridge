@@ -9,6 +9,7 @@ import Login from './pages/Login/Login.jsx'
 import Signup from './pages/Signup/Signup.jsx'
 import Dashboard from './pages/Dashboard/Dashboard.jsx'
 import Professionals from './pages/Professionals/Professionals.jsx'
+import ProfessionalProfile from './pages/ProfessionalProfile/ProfessionalProfile.jsx'
 import Schools from './pages/Schools/Schools.jsx'
 import SmartSearch from './pages/SmartSearch/SmartSearch.jsx'
 import Appointments from './pages/Appointments/Appointments.jsx'
@@ -41,6 +42,14 @@ export default function App() {
         {/* Auth required for all features */}
         <Route path="/dashboard" element={<RequireAuth><Dashboard /></RequireAuth>} />
         <Route path="/professionals" element={<RequireAuth><Professionals /></RequireAuth>} />
+        <Route
+  path="/professionals/:professionalId"
+  element={
+    <RequireAuth>
+      <ProfessionalProfile />
+    </RequireAuth>
+  }
+/>
         <Route path="/schools" element={<RequireAuth><Schools /></RequireAuth>} />
         <Route path="/institutions/:institutionId" element={<InstitutionDetail />} />
         <Route path="/search" element={<RequireAuth><SmartSearch /></RequireAuth>} />
