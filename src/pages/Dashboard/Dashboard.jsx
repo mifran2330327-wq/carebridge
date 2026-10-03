@@ -68,19 +68,15 @@ export default function Dashboard() {
           const loadedChildren = children || []
           setProfileChildren(loadedChildren)
 
-         const formattedAppts = (appts || [])
+          const formattedAppts = (appts || [])
   .filter((a) => {
-    const date = new Date(a.scheduledAt)
-
-    const isFuture = date >= new Date()
-
     const status = String(a.status || '').toUpperCase()
 
     const isActive =
       status !== 'CANCELLED' &&
       status !== 'COMPLETED'
 
-    return isFuture && isActive
+    return isActive
   })
   .sort(
     (a, b) =>
